@@ -151,8 +151,8 @@
 
         /* HOMEリンク（ヘッダー部分）のスタイル */
         .side-nav .nav-home a {
-            font-size: 2.2rem; /* 少し大きく */
-            font-weight: 700;  /* 太く */
+            font-size: 2.2rem; 
+            font-weight: 700;  
             margin-bottom: 5px;
         }
 
@@ -160,7 +160,7 @@
             color: rgba(37, 131, 198, 1); 
             text-decoration: none;
             font-size: 2rem; 
-            font-weight: 400; /* HOME以外は標準の太さに */
+            font-weight: 400; 
             letter-spacing: 0.15em;
             line-height: 1.1; 
             transition: color 0.3s;
@@ -207,20 +207,23 @@
         #info { background-color: #D7D4CC; }
         #event { background-color: rgba(183, 182, 178, 0.85); }
         #access { background-color: #F2F4EB; }
+        #review { background-color: #D7D4CC; } /* 追加: REVIEWセクションの背景色 */
 
         /* 明るい背景のセクションの文字色を暗く設定 */
-        #statement, #artist, #info, #event, #access {
+        #statement, #artist, #info, #event, #access, #review {
             color: var(--dark-text-color);
         }
 
-        /* === ランダムな装飾線（各セクション3本ずつ） === */
+        /* === ランダムな装飾線 === */
         #statement::before,
         #statement::after,
         #statement .section-inner::before, #statement .section-inner::after,
         #info::after,
         #info .section-inner::before, #info .section-inner::after,
         #access::after,
-        #access .section-inner::after {
+        #access .section-inner::after,
+        #review::after,
+        #review .section-inner::before {
             content: '';
             position: absolute;
             background-color: rgba(0, 0, 0, 0.4); 
@@ -229,7 +232,7 @@
             pointer-events: none; 
         }
 
-        /* PCでのランダムな配置（左右の広い余白を活用） */
+        /* PCでのランダムな配置 */
         /* --- STATEMENT (3本) --- */
         #statement::before { width: 500px; top: 0%; left: 8%; transform: rotate(-60deg); }
         #statement::after  { width: 180px; bottom: 15%; right: 10%; transform: rotate(-15deg); }
@@ -245,6 +248,11 @@
         #access::after  { width: 100px; bottom: 80%; left: 6%; transform: rotate(60deg); }
         #access .section-inner::after  { width: 250px; top: 10%; right: -25%; transform: rotate(-60deg); }
 
+        /* --- REVIEW (2本) --- */
+        #review::after  { width: 130px; bottom: 20%; right: 8%; transform: rotate(25deg); }
+        #review .section-inner::before { width: 110px; top: 25%; left: -15%; transform: rotate(-35deg); }
+
+
         /* --- コンテンツの中身 --- */
         .section-inner {
             max-width: 750px; 
@@ -259,8 +267,8 @@
                 margin-left: auto; 
                 margin-right: 12%; 
             }
-            /* ARTISTとACCESSセクションは右寄せを解除し、中央揃えに */
-            #artist .section-inner, #access .section-inner {
+            /* 中央揃えにするセクション */
+            #artist .section-inner, #access .section-inner, #review .section-inner {
                 margin-right: auto;
             }
             .hamburger {
@@ -281,8 +289,8 @@
             color: var(--brand-blue);
         }
 
-        /* ARTISTとACCESSセクションの見出しは中央揃え */
-        #artist .section-inner > h3, #access .section-inner > h3 {
+        /* 中央揃えの見出し */
+        #artist .section-inner > h3, #access .section-inner > h3, #review .section-inner > h2 {
             text-align: center;
         }
 
@@ -300,8 +308,8 @@
             background-color: rgba(0, 0, 0, 0.4);
         }
 
-        /* ARTISTとACCESSセクションの下線は消す */
-        #artist .section-inner > h3::after, #access .section-inner > h3::after {
+        /* 中央揃えセクションの下線は消す */
+        #artist .section-inner > h3::after, #access .section-inner > h3::after, #review .section-inner > h2::after {
             display: none;
         }
 
@@ -342,6 +350,30 @@
         .statement-text p {
             margin-bottom: 1.8em;
             text-align: justify;
+        }
+
+        /* === REVIEWセクション（COMING SOON）のデザイン === */
+        .coming-soon-box {
+            text-align: center;
+            padding: 60px 20px;
+            border: 2px dashed rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin-top: 20px;
+        }
+
+        .coming-soon-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: rgba(37, 131, 198, 0.6); /* 少し透かして準備中っぽさを出す */
+            letter-spacing: 0.2em;
+            margin: 0 0 15px 0;
+        }
+
+        .coming-soon-desc {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
         }
 
         /* === ACCESSセクションのデザイン === */
@@ -480,9 +512,17 @@
             #info .section-inner::before { top: 35px; left: 70%; transform: rotate(-15deg); width: 85px;}
             #info .section-inner::after  { bottom: 45px; left: 25%; transform: rotate(10deg); width: 105px;}
 
-            /* ★ACCESSスマホ版の調整 */
             #access::after  { bottom: 20px; left: 15%; transform: rotate(-10deg); width: 140px;}
             #access .section-inner::after  { top: 25px; right: 10%; transform: rotate(12deg); width: 120px; bottom: auto; left: auto;}
+
+            /* REVIEWのスマホ用装飾線 */
+            #review::after  { bottom: 20px; right: 15%; transform: rotate(-20deg); width: 130px;}
+            #review .section-inner::before { top: 25px; left: 15%; transform: rotate(15deg); width: 110px;}
+
+            /* スマホ用のCOMING SOONテキスト調整 */
+            .coming-soon-text {
+                font-size: 1.8rem;
+            }
 
             dt, dd { width: 100%; border-bottom: none; }
             dt { margin-bottom: 5px; color: #666666; font-size: 0.9rem; } 
@@ -516,6 +556,7 @@
             <li><a href="#info">EXHIBITION INFO</a></li>
             <li><a href="#event">EVENT</a></li>
             <li><a href="#access">ACCESS</a></li>
+            <li><a href="#review">REVIEW</a></li>
         </ul>
     </nav>
 
@@ -527,6 +568,7 @@
             <li><a href="#info">EXHIBITION INFO</a></li>
             <li><a href="#event">EVENT</a></li>
             <li><a href="#access">ACCESS</a></li>
+            <li><a href="#review">REVIEW</a></li>
         </ul>
     </nav>
 
@@ -555,13 +597,13 @@
                 
                 <div class="artist-grid">
                     <div class="artist-card">
-                        <div class="artist-icon"><img src="image/igarashi.png" alt="五十嵐 千紘"></div>
+                        <div class="artist-icon"><img src="igarashi.png" alt="五十嵐 千紘"></div>
                         <h3 class="artist-name">五十嵐 千紘</h3>
                         <p class="artist-romaji">Chihiro Igarashi</p>
                     </div>
 
                     <div class="artist-card">
-                        <div class="artist-icon"><img src="image/shimazu.png" alt="島津 優理"></div>
+                        <div class="artist-icon"><img src="shimazu.png" alt="島津 優理"></div>
                         <h3 class="artist-name">島津 優理</h3>
                         <p class="artist-romaji">Yuri Shimazu</p>
                     </div>
@@ -573,7 +615,7 @@
                     </div>
 
                     <div class="artist-card">
-                        <div class="artist-icon"><img src="image/moriuchi.png" alt="森内 慎之助"></div>
+                        <div class="artist-icon"><img src="moriuchi.png" alt="森内 慎之助"></div>
                         <h3 class="artist-name">森内 慎之助</h3>
                         <p class="artist-romaji">Shinnosuke Moriuchi</p>
                     </div>
@@ -634,6 +676,17 @@
                 </div>
             </div>
         </section>
+
+        <section id="review">
+            <div class="section-inner">
+                <h2>REVIEW</h2>
+                <div class="coming-soon-box">
+                    <p class="coming-soon-text">COMING SOON</p>
+                    <p class="coming-soon-desc">展示会期終了後、こちらにレビューを公開予定です。</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer>
