@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* 全体の設定（index.htmlと統一） */
+        /* 全体の設定 */
         :root {
             --theme-color: #ffffff;
             --accent-color: #D4AF37; 
@@ -136,7 +136,6 @@
             gap: 8px; 
         }
 
-        /* HOMEリンク（ヘッダー部分）のスタイル */
         .side-nav .nav-home a {
             font-size: 2.2rem; 
             font-weight: 700;  
@@ -276,14 +275,25 @@
             position: relative;
         }
 
+        /* ★変更: フリック(スワイプ)で動くようにScroll Snapを設定 */
         .carousel-track {
             display: flex;
-            transition: transform 0.4s ease-in-out; 
+            overflow-x: auto; /* 横スクロールを可能に */
+            scroll-snap-type: x mandatory; /* スクロールがピタッと止まるようにする */
+            scroll-behavior: smooth; /* クリック時のスクロールを滑らかに */
+            -webkit-overflow-scrolling: touch; /* スマホ特有の慣性スクロール */
+            scrollbar-width: none; /* Firefoxでスクロールバーを隠す */
+        }
+        
+        /* Chrome, Safariでスクロールバーを隠す */
+        .carousel-track::-webkit-scrollbar {
+            display: none; 
         }
 
         .carousel-slide {
             min-width: 100%; 
             box-sizing: border-box;
+            scroll-snap-align: start; /* ここでピタッと止まる */
         }
 
         .carousel-img {
@@ -581,18 +591,34 @@
             }
         });
 
-        // カルーセルの動作処理
+        // ★変更: カルーセルのスクロール制御
         const carousels = document.querySelectorAll('.carousel-container');
         carousels.forEach(carousel => {
             const track = carousel.querySelector('.carousel-track');
+            const slides = carousel.querySelectorAll('.carousel-slide');
             const dots = carousel.querySelectorAll('.dot');
             
+            // 1. ドットをクリックしたとき、該当するスライドまで横スクロールする
             dots.forEach((dot, index) => {
                 dot.addEventListener('click', () => {
-                    track.style.transform = `translateX(-${index * 100}%)`;
-                    dots.forEach(d => d.classList.remove('active'));
-                    dot.classList.add('active');
+                    const slideWidth = slides[0].clientWidth;
+                    track.scrollTo({
+                        left: slideWidth * index,
+                        behavior: 'smooth'
+                    });
                 });
+            });
+
+            // 2. 指でフリック（スクロール）したとき、丸ポチのアクティブ状態を更新する
+            track.addEventListener('scroll', () => {
+                const slideWidth = slides[0].clientWidth;
+                // 現在のスクロール位置をスライド幅で割り、四捨五入して現在のインデックスを出す
+                const index = Math.round(track.scrollLeft / slideWidth);
+                
+                dots.forEach(d => d.classList.remove('active'));
+                if (dots[index]) {
+                    dots[index].classList.add('active');
+                }
             });
         });
     </script>
