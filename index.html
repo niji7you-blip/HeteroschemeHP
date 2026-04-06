@@ -58,7 +58,7 @@
             position: absolute;
             width: 100%;
             height: 4px;
-            background-color: #000;
+            background-color: #6BAEE0; /* ★水色に変更しました */
             transition: all 0.3s ease;
         }
 
@@ -233,25 +233,17 @@
         }
 
         /* PCでのランダムな配置 */
-        /* --- STATEMENT (3本) --- */
         #statement::before { width: 500px; top: 0%; left: 8%; transform: rotate(-60deg); }
         #statement::after  { width: 180px; bottom: 15%; right: 10%; transform: rotate(-15deg); }
         #statement .section-inner::before { width: 150px; top: 40%; left: -20%; transform: rotate(60deg); }
         #statement .section-inner::after  { width: 90px; bottom: 5%; right: -10%; transform: rotate(-40deg); }
-
-        /* --- INFO (3本) --- */
         #info::after  { width: 100px; bottom: 10%; right: 5%; transform: rotate(45deg); }
         #info .section-inner::before { width: 400px; top: 90%; left: -70%; transform: rotate(50deg); }
         #info .section-inner::after  { width: 200px; top: -10%; right: -15%; transform: rotate(-60deg); }
-
-        /* --- ACCESS (2本) --- */
         #access::after  { width: 100px; bottom: 80%; left: 6%; transform: rotate(60deg); }
         #access .section-inner::after  { width: 250px; top: 10%; right: -25%; transform: rotate(-60deg); }
-
-        /* --- REVIEW (2本) --- */
         #review::after  { width: 130px; bottom: 20%; right: 8%; transform: rotate(25deg); }
         #review .section-inner::before { width: 110px; top: 25%; left: -15%; transform: rotate(-35deg); }
-
 
         /* --- コンテンツの中身 --- */
         .section-inner {
@@ -421,6 +413,17 @@
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
             transition: transform 0.3s ease, background 0.3s ease;
+            position: relative;
+        }
+
+        .card-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            border-radius: 15px;
         }
 
         .artist-card:hover {
@@ -458,12 +461,13 @@
             letter-spacing: 0.05em;
         }
 
-        /* --- 追加: アーティストのSNS・メールリンク --- */
         .artist-links {
             display: flex;
             justify-content: center;
             gap: 15px;
             margin-top: 15px;
+            position: relative; 
+            z-index: 2; 
         }
 
         .artist-links a {
@@ -487,6 +491,8 @@
         .btn-container {
             text-align: center;
             margin-top: 40px;
+            position: relative; 
+            z-index: 2;
         }
 
         .see-more-btn {
@@ -518,7 +524,7 @@
         /* === スマホ画面用のレイアウト === */
         @media (max-width: 768px) {
             .side-nav {
-                display: none; 
+                display: none !important; /* ★スマホで絶対に出現させない */
             }
             .section-inner {
                 margin: 0 auto; 
@@ -541,11 +547,9 @@
             #access::after  { bottom: 20px; left: 15%; transform: rotate(-10deg); width: 140px;}
             #access .section-inner::after  { top: 25px; right: 10%; transform: rotate(12deg); width: 120px; bottom: auto; left: auto;}
 
-            /* REVIEWのスマホ用装飾線 */
             #review::after  { bottom: 20px; right: 15%; transform: rotate(-20deg); width: 130px;}
             #review .section-inner::before { top: 25px; left: 15%; transform: rotate(15deg); width: 110px;}
 
-            /* スマホ用のCOMING SOONテキスト調整 */
             .coming-soon-text {
                 font-size: 1.8rem;
             }
@@ -623,6 +627,7 @@
                 
                 <div class="artist-grid">
                     <div class="artist-card">
+                        <a href="artists.html#igarashi" class="card-link"></a>
                         <div class="artist-icon"><img src="image/igarashi.png" alt="五十嵐 千紘"></div>
                         <h3 class="artist-name">五十嵐 千紘</h3>
                         <p class="artist-romaji">Chihiro Igarashi</p>
@@ -638,6 +643,7 @@
                     </div>
 
                     <div class="artist-card">
+                        <a href="artists.html#shimazu" class="card-link"></a>
                         <div class="artist-icon"><img src="image/shimazu.png" alt="島津 優理"></div>
                         <h3 class="artist-name">島津 優理</h3>
                         <p class="artist-romaji">Yuri Shimazu</p>
@@ -653,6 +659,7 @@
                     </div>
 
                     <div class="artist-card">
+                        <a href="artists.html#takahashi" class="card-link"></a>
                         <div class="artist-icon"><img src="" alt=""></div>
                         <h3 class="artist-name">髙橋 侑大</h3>
                         <p class="artist-romaji">Yudai Takahashi</p>
@@ -668,6 +675,7 @@
                     </div>
 
                     <div class="artist-card">
+                        <a href="artists.html#moriuchi" class="card-link"></a>
                         <div class="artist-icon"><img src="image/moriuchi.png" alt="森内 慎之助"></div>
                         <h3 class="artist-name">森内 慎之助</h3>
                         <p class="artist-romaji">Shinnosuke Moriuchi</p>
