@@ -3,24 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heteroscheme</title>
+    <title>Heteroscheme | HOME</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* 全体の設定 */
+        /* 基本設定 */
         :root {
             --theme-color: #ffffff;
-            --accent-color: #D4AF37; 
+            --accent-color: #2583C6;
             --bg-overlay: rgba(0, 0, 0, 0.4); 
-            --brand-blue: rgba(37, 131, 198, 0.85); 
-            --dark-text-color: #333333; 
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Noto Sans JP', sans-serif;
             color: var(--theme-color);
             line-height: 1.8;
@@ -31,642 +28,169 @@
         /* --- 背景画像の設定 --- */
         .bg-image {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: url('haikei-9.png'); 
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-image: url('image/haikei-2.png'); /* imageフォルダから読み込み */
             background-size: cover;
             background-position: top center;
             z-index: -2;
         }
 
-        /* --- スマホ用：ハンバーガーメニューボタン --- */
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: var(--bg-overlay);
+            z-index: -1;
+        }
+
+        /* --- ハンバーガーメニュー --- */
         .hamburger {
             position: fixed;
-            top: 30px;
-            right: 30px;
-            width: 45px;
-            height: 30px;
-            cursor: pointer;
-            z-index: 100;
+            top: 30px; right: 30px;
+            width: 35px; height: 24px;
+            cursor: pointer; z-index: 100;
         }
-
         .hamburger span {
-            display: block;
-            position: absolute;
-            width: 100%;
-            height: 4px;
-            background-color: #000;
-            transition: all 0.3s ease;
+            display: block; position: absolute;
+            width: 100%; height: 2px;
+            background-color: #fff; transition: all 0.3s ease;
         }
-
         .hamburger span:nth-child(1) { top: 0; }
-        .hamburger span:nth-child(2) { top: 13px; }
+        .hamburger span:nth-child(2) { top: 11px; }
         .hamburger span:nth-child(3) { bottom: 0; }
 
-        .hamburger.active span:nth-child(1) {
-            transform: translateY(13px) rotate(45deg);
-        }
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        .hamburger.active span:nth-child(3) {
-            transform: translateY(-13px) rotate(-45deg);
-        }
+        .hamburger.active span:nth-child(1) { transform: translateY(11px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-11px) rotate(-45deg); }
 
-        /* --- スマホ用：全画面ナビゲーションメニュー --- */
         .nav-menu {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(37, 131, 198, 0.95);  
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
             z-index: 99;
         }
+        .nav-menu.active { opacity: 1; visibility: visible; }
+        .nav-menu ul { list-style: none; padding: 0; text-align: center; }
+        .nav-menu li { margin: 30px 0; }
+        .nav-menu a { color: #fff; text-decoration: none; font-size: 1.5rem; letter-spacing: 0.15em; }
+        .nav-menu a:hover { color: var(--accent-color); }
 
-        .nav-menu.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .nav-menu ul {
-            list-style: none;
-            padding: 0;
-            text-align: center;
-        }
-
-        .nav-menu li {
-            margin: 40px 0;
-        }
-
-        .nav-menu a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.8rem;
-            letter-spacing: 0.15em;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: var(--accent-color);
-        }
-
-        /* --- PC用：左下追従インデックスメニュー --- */
-        .side-nav {
-            position: fixed;
-            bottom: 60px;
-            left: 60px;
-            z-index: 90;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-20px);
-            transition: all 0.1s ease-out;
-        }
-
-        .side-nav.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0);
-        }
-
-        .side-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px; 
-        }
-
-        /* HOMEリンク（ヘッダー部分）のスタイル */
-        .side-nav .nav-home a {
-            font-size: 2.2rem; /* 少し大きく */
-            font-weight: 700;  /* 太く */
-            margin-bottom: 5px;
-        }
-
-        .side-nav a {
-            color: rgba(37, 131, 198, 1); 
-            text-decoration: none;
-            font-size: 2rem; 
-            font-weight: 400; /* HOME以外は標準の太さに */
-            letter-spacing: 0.15em;
-            line-height: 1.1; 
-            transition: color 0.3s;
-        }
-
-        .side-nav a:hover {
-            color: var(--accent-color); 
-        }
-
-        /* --- ヘッダー --- */
+        /* --- ヘッダー（ファーストビュー） --- */
         header {
-            height: 100vh; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            text-align: center;
+            height: 100vh;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            position: relative; text-align: center;
         }
-
-        .scroll-down {
-            position: absolute;
-            bottom: 40px;
-            font-size: 1.2rem;
-            letter-spacing: 0.2em;
-            color: rgba(0, 0, 0, 0.8);
-            animation: bounce 2s infinite;
-        }
-
-        /* --- セクション全体 --- */
-        section {
-            width: 100%;
-            padding: 100px 0; 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05); 
-            overflow: hidden; 
-            position: relative; /* 黒線の配置基準 */
-        }
-
-        /* 背景色の設定 */
-        #statement { background-color: #D7D4CC; }
-        #artist { background-color: #F2F4EB; }
-        #info { background-color: #D7D4CC; }
-        #event { background-color: rgba(183, 182, 178, 0.85); }
-        #access { background-color: #F2F4EB; }
-
-        /* 明るい背景のセクションの文字色を暗く設定 */
-        #statement, #artist, #info, #event, #access {
-            color: var(--dark-text-color);
-        }
-
-        /* === ランダムな装飾線（各セクション3本ずつ） === */
-        #statement::before,
-        #statement::after,
-        #statement .section-inner::before, #statement .section-inner::after,
-        #info::after,
-        #info .section-inner::before, #info .section-inner::after,
-        #access::after,
-        #access .section-inner::after {
-            content: '';
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.4); 
-            height: 1.5px;
-            z-index: 0;
-            pointer-events: none; 
-        }
-
-        /* PCでのランダムな配置（左右の広い余白を活用） */
-        /* --- STATEMENT (3本) --- */
-        #statement::before { width: 500px; top: 0%; left: 8%; transform: rotate(-60deg); }
-        #statement::after  { width: 180px; bottom: 15%; right: 10%; transform: rotate(-15deg); }
-        #statement .section-inner::before { width: 150px; top: 40%; left: -20%; transform: rotate(60deg); }
-        #statement .section-inner::after  { width: 90px; bottom: 5%; right: -10%; transform: rotate(-40deg); }
-
-        /* --- INFO (3本) --- */
-        #info::after  { width: 100px; bottom: 10%; right: 5%; transform: rotate(45deg); }
-        #info .section-inner::before { width: 400px; top: 90%; left: -70%; transform: rotate(50deg); }
-        #info .section-inner::after  { width: 200px; top: -10%; right: -15%; transform: rotate(-60deg); }
-
-        /* --- ACCESS (2本) --- */
-        #access::after  { width: 100px; bottom: 80%; left: 6%; transform: rotate(60deg); }
-        #access .section-inner::after  { width: 250px; top: 10%; right: -25%; transform: rotate(-60deg); }
-
-        /* --- コンテンツの中身 --- */
-        .section-inner {
-            max-width: 750px; 
-            padding: 0 20px;
-            position: relative;
-            z-index: 2; /* 文字が線の上にくるように明示 */
-        }
-
-        /* === PC画面用のレイアウト（右寄せ設定） === */
-        @media (min-width: 769px) {
-            .section-inner {
-                margin-left: auto; 
-                margin-right: 12%; 
-            }
-            /* ARTISTとACCESSセクションは右寄せを解除し、中央揃えに */
-            #artist .section-inner, #access .section-inner {
-                margin-right: auto;
-            }
-            .hamburger {
-                display: none; 
-            }
-        }
-
-        /* === 見出しのデザイン（右端まで伸びる線） === */
-        .section-inner > h2, .section-inner > h3 {
-            font-size: 3rem;
-            font-weight: 500;
-            margin-top: 0;
-            margin-bottom: 40px;
-            text-align: left;
-            letter-spacing: 0.15em;
-            position: relative; 
-            padding-bottom: 10px;
-            color: var(--brand-blue);
-        }
-
-        /* ARTISTとACCESSセクションの見出しは中央揃え */
-        #artist .section-inner > h3, #access .section-inner > h3 {
-            text-align: center;
-        }
-
-        /* 暗い背景セクションの見出しは白のまま */
-        #event .section-inner > h3 { color: #dddddd; }
-
-        /* 右端まで伸びる下線 */
-        .section-inner > h2::after, .section-inner > h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100vw; 
-            height: 2px;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        /* ARTISTとACCESSセクションの下線は消す */
-        #artist .section-inner > h3::after, #access .section-inner > h3::after {
-            display: none;
-        }
-
-        dl {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0;
-        }
-
-        dt {
-            width: 30%;
-            font-weight: 500;
-            margin-bottom: 25px;
-            border-bottom: 1px solid rgba(0,0,0,0.1); 
-        }
-
-        dd {
-            width: 70%;
-            margin: 0 0 25px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.1); 
-        }
-
-        /* 暗い背景セクション内のdlの線を調整 */
-        #event dt, #event dd {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .note {
-            font-size: 0.9rem;
-            margin-top: 20px;
-            color: var(--dark-text-color);
-        }
-        
-        #event .note {
-            color: #ffffff;
-        }
-
-        .statement-text p {
-            margin-bottom: 1.8em;
-            text-align: justify;
-        }
-
-        /* === ACCESSセクションのデザイン === */
-        .map-container {
-            width: 100%;
-            margin-top: 30px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        .map-container iframe {
-            width: 100%;
-            height: 400px;
-            border: none;
-            display: block;
-        }
-
-        .site-link {
-            display: inline-block;
-            margin-top: 10px;
-            color: rgba(37, 131, 198, 1); 
-            text-decoration: underline;
-            font-size: 0.95rem;
-            letter-spacing: 0.1em;
-            transition: color 0.3s ease;
-        }
-
-        .site-link:hover {
+        header h1 {
+            font-size: 4rem; font-weight: 700;
             color: var(--accent-color);
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+        .scroll-down {
+            position: absolute; bottom: 40px;
+            font-size: 0.8rem; animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
         }
 
-        /* === ARTISTセクションのデザイン === */
-        .artist-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 20px; 
+        /* --- コンテンツ --- */
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        section {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 50px; border-radius: 4px; margin-bottom: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            scroll-margin-top: 80px;
         }
-
-        .artist-card {
-            background: #ffffff; 
-            border: 1px solid rgba(0, 0, 0, 0.1); 
-            border-radius: 15px; 
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-            transition: transform 0.3s ease, background 0.3s ease;
+        h2 {
+            font-size: 1.4rem; border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px; margin-bottom: 30px; text-align: center;
         }
+        dl { display: flex; flex-wrap: wrap; margin: 0; }
+        dt { width: 30%; font-weight: 500; margin-bottom: 15px; }
+        dd { width: 70%; margin: 0 0 15px 0; }
+        .note { font-size: 0.9rem; color: #ccc; margin-top: 20px; }
+        footer { text-align: center; padding: 40px 0; font-size: 0.8rem; color: #888; }
 
-        .artist-card:hover {
-            transform: translateY(-5px); 
-            background: rgba(0, 0, 0, 0.02); 
-        }
-
-        .artist-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: #f0f0f0; 
-            margin: 0 auto 15px;
-            overflow: hidden;
-        }
-
-        .artist-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .artist-name {
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin: 0 0 5px;
-            letter-spacing: 0.1em;
-            color: var(--dark-text-color); 
-        }
-
-        .artist-romaji {
-            font-size: 0.85rem;
-            color: #666666; 
-            margin: 0;
-            letter-spacing: 0.05em;
-        }
-
-        .btn-container {
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .see-more-btn {
-            display: inline-block;
-            padding: 12px 40px;
-            border: 1px solid var(--brand-blue); 
-            border-radius: 30px;
-            color: var(--brand-blue); 
-            text-decoration: none;
-            font-size: 0.9rem;
-            letter-spacing: 0.15em;
-            transition: all 0.3s ease;
-        }
-
-        .see-more-btn:hover {
-            background-color: var(--brand-blue); 
-            color: #ffffff; 
-        }
-
-        footer {
-            background-color: rgba(15, 10, 8, 0.95); 
-            text-align: center;
-            padding: 40px 0;
-            font-size: 0.8rem;
-            color: #888888;
-            letter-spacing: 0.1em;
-        }
-
-        /* === スマホ画面用のレイアウト === */
-        @media (max-width: 768px) {
-            .side-nav {
-                display: none; 
-            }
-            .section-inner {
-                margin: 0 auto; 
-            }
-            .hamburger {
-                top: 20px; 
-                right: 20px; 
-            }
-            section { padding: 60px 0; }
-
-            /* スマホ用：装飾線を文字に被らないよう「上下の余白(60px)の中」に配置 */
-            #statement::after  { bottom: 20px; right: 5%; transform: rotate(-15deg); width: 150px;}
-            #statement .section-inner::before { top: 35px; left: 60%; transform: rotate(5deg); width: 80px;}
-            #statement .section-inner::after  { bottom: 40px; left: 15%; transform: rotate(-5deg); width: 100px;}
-            
-            #info::after  { bottom: 20px; right: 15%; transform: rotate(-8deg); width: 160px;}
-            #info .section-inner::before { top: 35px; left: 70%; transform: rotate(-15deg); width: 85px;}
-            #info .section-inner::after  { bottom: 45px; left: 25%; transform: rotate(10deg); width: 105px;}
-
-            /* ★ACCESSスマホ版の調整 */
-            #access::after  { bottom: 20px; left: 15%; transform: rotate(-10deg); width: 140px;}
-            #access .section-inner::after  { top: 25px; right: 10%; transform: rotate(12deg); width: 120px; bottom: auto; left: auto;}
-
-            dt, dd { width: 100%; border-bottom: none; }
-            dt { margin-bottom: 5px; color: #666666; font-size: 0.9rem; } 
-            dd { margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px; }
-            
-            #event dt { color: #bbbbbb; }
-            #event dd { border-bottom: 1px solid rgba(255,255,255,0.1); }
-
-            .artist-grid { grid-template-columns: 1fr; }
-            .map-container iframe { height: 300px; } 
-            .section-inner > h2, .section-inner > h3 { font-size: 2.2rem; } 
+        @media (max-width: 600px) {
+            header h1 { font-size: 2.5rem; }
+            dt, dd { width: 100%; }
+            section { padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
-
     <div class="bg-image"></div>
     <div class="bg-overlay"></div>
 
-    <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
     <nav class="nav-menu" id="nav-menu">
         <ul>
-            <li><a href="#">HOME</a></li>
-            <li><a href="#statement">STATEMENT</a></li>
-            <li><a href="#artist">ARTIST</a></li>
             <li><a href="#info">EXHIBITION INFO</a></li>
             <li><a href="#event">EVENT</a></li>
-            <li><a href="#access">ACCESS</a></li>
+            <li><a href="artist.html">ARTIST</a></li> <li><a href="#statement">STATEMENT</a></li>
         </ul>
     </nav>
 
-    <nav class="side-nav" id="side-nav">
-        <ul>
-            <li class="nav-home"><a href="#">HOME</a></li>
-            <li><a href="#statement">STATEMENT</a></li>
-            <li><a href="#artist">ARTIST</a></li>
-            <li><a href="#info">EXHIBITION INFO</a></li>
-            <li><a href="#event">EVENT</a></li>
-            <li><a href="#access">ACCESS</a></li>
-        </ul>
-    </nav>
-
-    <header id="hero-header">
+    <header>
+        <h1>Heteroscheme</h1>
         <div class="scroll-down">Scroll ↓</div>
     </header>
 
-    <main>
-        <section id="statement" class="statement-text">
-            <div class="section-inner">
-                <h2>STATEMENT</h2>
-                <p>この度、五十嵐千紘、島津優理、髙橋侑大、森内慎之助はグループ展「Heteroscheme」を開催します。本展で、五十嵐は日常の事物を楽器に見立て、想像上の音で《きらきら星》を演奏する映像作品を、島津は予測不能な挙動をするコントローラーでひたすら高い音を作るゲーム作品を、髙橋は厳密に記されすぎた楽譜と八百長という行為を接続した映像インスタレーションを、森内は（）を展示します。</p>
-                <p>「Heteroscheme」（ヘテロスキーム）は音を用いながらも別々の領域で活動する私たちが、「異なる尺度で先の時間に音を配置すること」を束ねるための造語です。</p>
-                <p>この４人はそれぞれ、音と事象との結びつきに関心を寄せてきました。そして音を媒介に、行為や出来事を再解釈する実践を行ってきました。<br>
-                耳は瞼のように、外の世界と自身を隔てる術を持ちません。至る所に音が氾濫する現代において、私たちの聴覚はその無数の情報に晒され続けています。</p>
-                <p>その中で、私たちはあえて「scheme(スキーム)」を広げ、先にある時間に音を配置します。或いは「scheme」を手放し、距離を置くこともできるはずです。</p>
-                <p>雑踏、楽譜、架空の世界。<br>
-                本展では、各作家がスキームを作るということに焦点を当てます。未来の時間を各々が異なるスケールで、どのように形作ることができるのか。</p>
-                <p>私たちはそこに、「Heteroscheme」を立ち上げます。</p>
-            </div>
-        </section>
-
-        <section id="artist">
-            <div class="section-inner">
-                <h3>ARTIST</h3>
-                
-                <div class="artist-grid">
-                    <div class="artist-card">
-                        <div class="artist-icon"><img src="igarashi.png" alt="五十嵐 千紘"></div>
-                        <h3 class="artist-name">五十嵐 千紘</h3>
-                        <p class="artist-romaji">Chihiro Igarashi</p>
-                    </div>
-
-                    <div class="artist-card">
-                        <div class="artist-icon"><img src="shimazu.png" alt="島津 優理"></div>
-                        <h3 class="artist-name">島津 優理</h3>
-                        <p class="artist-romaji">Yuri Shimazu</p>
-                    </div>
-
-                    <div class="artist-card">
-                        <div class="artist-icon"><img src="" alt=""></div>
-                        <h3 class="artist-name">髙橋 侑大</h3>
-                        <p class="artist-romaji">Yudai Takahashi</p>
-                    </div>
-
-                    <div class="artist-card">
-                        <div class="artist-icon"><img src="moriuchi.png" alt="森内 慎之助"></div>
-                        <h3 class="artist-name">森内 慎之助</h3>
-                        <p class="artist-romaji">Shinnosuke Moriuchi</p>
-                    </div>
-                </div>
-
-                <div class="btn-container">
-                    <a href="artists.html" class="see-more-btn">See More</a>
-                </div>
-
-            </div>
-        </section>
-
+    <div class="container">
         <section id="info">
-            <div class="section-inner">
-                <h2>EXHIBITION INFO</h2>
-                <dl>
-                    <dt>展示タイトル</dt>
-                    <dd>Heteroscheme</dd>
-                    <dt>日程</dt>
-                    <dd>5/8 - 5/31（休廊日：月、火）</dd>
-                    <dt>開場時間</dt>
-                    <dd>13:00 - 19:00</dd>
-                    <dt>入場料</dt>
-                    <dd>無料(予約不要)</dd>
-                    <dt>後援</dt>
-                    <dd>アーツカウンシル東京<br></dd>
-                </dl>
-            </div>
+            <h2>EXHIBITION INFO</h2>
+            <dl>
+                <dt>展示タイトル</dt><dd>Heteroscheme</dd>
+                <dt>展示作家</dt><dd>五十嵐千紘、島津優理、髙橋侑大、森内慎之助</dd>
+                <dt>展示会期</dt><dd>5/8 - 5/31（休廊日：月、火）</dd>
+                <dt>開場時間</dt><dd>13:00 - 19:00</dd>
+                <dt>展示場所</dt><dd>soco1010<br>（東京都足立区千住橋戸町２２−４８）</dd>
+            </dl>
         </section>
 
         <section id="event">
-            <div class="section-inner">
-                <h3>EVENT</h3>
-                <dl>
-                    <dt>日時</dt>
-                    <dd>5/31 17:00 - 18:00</dd>
-                    <dt>トークゲスト</dt>
-                    <dd>涌井智仁</dd>
-                </dl>
-                <p class="note">展示最終日には美術家/音楽家の涌井智仁氏をお招きして、展示作家４名とのトークイベントを開催いたします。</p>
-            </div>
+            <h2>EVENT</h2>
+            <dl>
+                <dt>日時</dt><dd>5/31 17:00 - 18:00</dd>
+                <dt>ゲスト</dt><dd>涌井智仁</dd>
+            </dl>
+            <p class="note">※展示最終日には美術家/音楽家の涌井智仁氏をお招きして、トークイベントを開催いたします。</p>
         </section>
 
-        <section id="access">
-            <div class="section-inner">
-                <h3>ACCESS</h3>
-                <dl>
-                    <dt>会場</dt>
-                    <dd>
-                        soco1010<br>
-                        〒120-0038 東京都足立区千住橋戸町22-48<br>
-                        <a href="https://soco1010.space/" target="_blank" rel="noopener noreferrer" class="site-link">▶ soco1010 公式サイト</a>
-                    </dd>
-                </dl>
-                
-                <div class="map-container">
-                    <iframe src="https://maps.google.co.jp/maps?output=embed&q=soco1010,東京都足立区千住橋戸町22-48&z=16" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-            </div>
+        <section id="statement">
+            <h2>STATEMENT</h2>
+            <p>この度、五十嵐千紘、島津優理、髙橋侑大、森内慎之助はグループ展「Heteroscheme」を開催します。本展で、五十嵐は（）、島津は（）、髙橋は厳密に記されすぎた楽譜と八百長という行為を接続した映像インスタレーション、森内は（）を展示します。</p>
+            <p>「Heteroscheme」（ヘテロスキーム）は音を用いながらも別々の領域で活動する私たちが、「異なる尺度で先の時間に音を配置すること」を束ねるための造語です。</p>
+            <p>この４人はそれぞれ、音と事象との結びつきに関心を寄せてきました。そして音を媒介に、行為や出来事を再解釈する実践を行ってきました。</p>
+            <p>私たちはあえて「scheme(スキーム)」を広げ、先にある時間に音を配置します。或いは「scheme」を手放し、距離を置くこともできるはずです。</p>
+            <p>私たちはそこに、「Heteroscheme」を立ち上げます。</p>
         </section>
-    </main>
 
-    <footer>
-        <p>&copy; 2026 Heteroscheme. All Rights Reserved.</p>
-    </footer>
+        <footer>&copy; 2026 Heteroscheme.</footer>
+    </div>
 
     <script>
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('nav-menu');
-        const navLinks = document.querySelectorAll('.nav-menu a');
-
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
         });
-
-        navLinks.forEach(link => {
+        document.querySelectorAll('.nav-menu a').forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
             });
-        });
-
-        const sideNav = document.getElementById('side-nav');
-        const heroHeader = document.getElementById('hero-header');
-
-        window.addEventListener('scroll', () => {
-            const heroHeight = heroHeader.offsetHeight;
-            
-            if (window.scrollY > heroHeight - 100) { 
-                sideNav.classList.add('show');
-            } else {
-                sideNav.classList.remove('show');
-            }
         });
     </script>
 </body>
