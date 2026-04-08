@@ -26,6 +26,7 @@
             color: var(--dark-text-color);
             line-height: 1.8;
             letter-spacing: 0.08em;
+            scroll-behavior: smooth;
             background-color: transparent; 
         }
 
@@ -104,10 +105,12 @@
             list-style: none;
             padding: 0;
             text-align: center;
+            overflow-y: auto; 
+            max-height: 90vh;
         }
 
         .nav-menu li {
-            margin: 40px 0;
+            margin: 30px 0;
         }
 
         .nav-menu a {
@@ -210,9 +213,11 @@
         #event { background-color: rgba(25, 25, 25, 0.95); } 
         #access { background-color: rgba(238, 238, 238, 0.9); }
         #archive { background-color: rgba(252, 252, 252, 0.9); } 
+        #credit { background-color: #ffffff; } 
+        #contact { background-color: rgba(238, 238, 238, 0.9); } 
 
         /* 文字色 */
-        #statement, #artist, #info, #access, #archive {
+        #statement, #artist, #info, #access, #archive, #contact, #credit {
             color: var(--dark-text-color);
         }
 
@@ -221,7 +226,9 @@
         #statement .section-inner::before, #statement .section-inner::after,
         #info::after, #info .section-inner::before, #info .section-inner::after,
         #access::after, #access .section-inner::after,
-        #archive::after, #archive .section-inner::before {
+        #archive::after, #archive .section-inner::before,
+        #credit::after, #credit .section-inner::before,
+        #contact::after, #contact .section-inner::before {
             content: '';
             position: absolute;
             background-color: rgba(0, 0, 0, 0.4); 
@@ -233,6 +240,7 @@
             transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.4s; 
         }
 
+        /* PCでのランダムな配置 */
         #statement::before { top: 0%; left: 8%; transform: rotate(-60deg); }
         #statement.is-visible::before { width: 500px; }
         #statement::after  { bottom: 15%; right: 10%; transform: rotate(-15deg); transform-origin: right center; }
@@ -259,6 +267,16 @@
         #archive .section-inner::before { top: 25%; left: -15%; transform: rotate(-35deg); }
         #archive.is-visible .section-inner::before { width: 110px; }
 
+        #credit::after { bottom: 25%; left: 8%; transform: rotate(45deg); }
+        #credit.is-visible::after { width: 100px; }
+        #credit .section-inner::before { top: 15%; right: -15%; transform: rotate(-15deg); transform-origin: right center; }
+        #credit.is-visible .section-inner::before { width: 180px; }
+
+        #contact::after { bottom: 15%; right: 12%; transform: rotate(-10deg); transform-origin: right center; }
+        #contact.is-visible::after { width: 140px; }
+        #contact .section-inner::before { top: 30%; left: -10%; transform: rotate(20deg); }
+        #contact.is-visible .section-inner::before { width: 120px; }
+
         /* --- コンテンツの中身 --- */
         .section-inner {
             max-width: 750px; 
@@ -273,7 +291,7 @@
                 margin-left: auto; 
                 margin-right: max(12%, calc((100vw - 1200px) / 2)); 
             }
-            #artist .section-inner, #access .section-inner, #archive .section-inner {
+            #artist .section-inner, #access .section-inner, #archive .section-inner, #contact .section-inner, #credit .section-inner {
                 margin-right: auto;
             }
             .hamburger {
@@ -294,12 +312,14 @@
             color: var(--brand-blue);
         }
 
+        /* ★修正: CONTACTとCREDITを左揃え（デフォルト）にするため、ここから除外 */
         #artist .section-inner > h3, #access .section-inner > h3, #archive .section-inner > h2 {
             text-align: center;
         }
 
         #event .section-inner > h3 { color: #dddddd; }
 
+        /* 見出しの下線 */
         .section-inner > h2::after, .section-inner > h3::after {
             content: '';
             position: absolute;
@@ -311,6 +331,7 @@
             transition: width 2.0s cubic-bezier(0.22, 1, 0.36, 1) 0.6s; 
         }
         
+        /* EVENTセクションの見出し下線は白に */
         #event .section-inner > h3::after {
             background-color: #ffffff;
         }
@@ -320,6 +341,7 @@
             width: 100vw;
         }
 
+        /* ★修正: CONTACTとCREDITの下線を表示させるため、ここから除外 */
         #artist .section-inner > h3::after, #access .section-inner > h3::after, #archive .section-inner > h2::after {
             display: none;
         }
@@ -343,6 +365,7 @@
             border-bottom: 1px solid rgba(0,0,0,0.15); 
         }
 
+        /* 暗い背景セクション(EVENT)内のdlの線を調整し、文字を大きく */
         #event dt, #event dd {
             border-bottom: 1px solid rgba(255,255,255,0.15);
         }
@@ -369,6 +392,102 @@
         .statement-text p {
             margin-bottom: 1.8em;
             text-align: justify;
+        }
+
+        /* === ロゴ等の画像スタイル === */
+        
+        /* 会場ロゴ */
+        .soco-logo {
+            width: 250px; 
+            height: auto;
+            display: block;
+            margin-bottom: 10px; 
+        }
+
+        /* アーツカウンシルロゴ */
+        .act-logo {
+            height: 100px; 
+            width: auto;
+            vertical-align: middle;
+            margin-left: 15px;
+        }
+
+        .credit-dd-act {
+            display: flex;
+            align-items: center;
+        }
+
+        /* クレジットのSNSアイコン */
+        .credit-sns {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .credit-sns-link {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            color: #888888;
+            transition: color 0.3s ease;
+        }
+        .credit-sns-link svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+        .credit-sns-link:hover {
+            color: var(--brand-blue);
+        }
+
+        /* 涌井さんのリンクアイコン */
+        .guest-links {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .guest-links a {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            color: #aaaaaa; 
+            transition: color 0.3s ease;
+        }
+
+        .guest-links a svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .guest-links a:hover {
+            color: var(--brand-blue); 
+        }
+
+        /* === CONTACTセクションの専用デザイン === */
+        .contact-message {
+            font-size: 1rem;
+            margin-bottom: 25px;
+            color: var(--dark-text-color);
+        }
+        
+        .contact-email {
+            font-size: 1.8rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+        
+        .contact-email a {
+            color: var(--brand-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-email a:hover {
+            color: var(--accent-color);
         }
 
         /* === EVENTセクションの強調デザイン === */
@@ -425,48 +544,6 @@
             margin: 0;
             text-align: justify;
             line-height: 1.7;
-        }
-
-        .guest-links {
-            display: flex;
-            justify-content: flex-start;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .guest-links a {
-            display: inline-block;
-            width: 22px;
-            height: 22px;
-            color: #bbbbbb;
-            transition: color 0.3s ease;
-        }
-
-        .guest-links a svg {
-            width: 100%;
-            height: 100%;
-            fill: currentColor;
-        }
-
-        .guest-links a:hover {
-            color: var(--accent-color);
-        }
-
-        .guest-url {
-            margin-top: 15px;
-        }
-
-        .guest-url a {
-            color: #bbbbbb;
-            font-size: 0.9rem;
-            text-decoration: underline;
-            transition: color 0.3s ease;
-            letter-spacing: 0.05em;
-            word-break: break-all;
-        }
-
-        .guest-url a:hover {
-            color: var(--accent-color);
         }
 
         /* === REVIEWセクション（COMING SOON）のデザイン === */
@@ -722,6 +799,16 @@
             #archive .section-inner::before { top: 25px; left: 15%; transform: rotate(15deg); }
             #archive.is-visible .section-inner::before { width: 110px; }
 
+            #contact::after { bottom: 15px; right: 10%; transform: rotate(-10deg); transform-origin: right center; }
+            #contact.is-visible::after { width: 120px; }
+            #contact .section-inner::before { top: 20px; left: 10%; transform: rotate(15deg); }
+            #contact.is-visible .section-inner::before { width: 90px; }
+
+            #credit::after { bottom: 20px; left: 5%; transform: rotate(30deg); }
+            #credit.is-visible::after { width: 100px; }
+            #credit .section-inner::before { top: 15px; right: 5%; transform: rotate(-15deg); transform-origin: right center; }
+            #credit.is-visible .section-inner::before { width: 120px; }
+
             .coming-soon-text {
                 font-size: 1.8rem;
             }
@@ -731,6 +818,11 @@
             dd { margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.15); padding-bottom: 10px; }
             
             #event dd { border-bottom: 1px solid rgba(255,255,255,0.15); }
+
+            /* スマホ時のロゴサイズ・連絡先調整 */
+            .soco-logo { width: 180px; margin-bottom: 10px; }
+            .act-logo { height: 70px; } 
+            .contact-email { font-size: 1.4rem; }
 
             .artist-grid { grid-template-columns: 1fr; }
             .map-container iframe { height: 300px; } 
@@ -765,24 +857,22 @@
     <nav class="nav-menu" id="nav-menu">
         <ul>
             <li><a href="#">HOME</a></li>
-            <li><a href="#statement">STATEMENT</a></li>
             <li><a href="#artist">ARTIST</a></li>
-            <li><a href="#info">EXHIBITION INFO</a></li>
-            <li><a href="#event">EVENT</a></li>
+            <li><a href="#info">INFOMATION</a></li>
             <li><a href="#access">ACCESS</a></li>
             <li><a href="#archive">ARCHIVE</a></li>
+            <li><a href="#contact">CONTACT</a></li>
         </ul>
     </nav>
 
     <nav class="side-nav" id="side-nav">
         <ul>
             <li class="nav-home"><a href="#">HOME</a></li>
-            <li><a href="#statement">STATEMENT</a></li>
             <li><a href="#artist">ARTIST</a></li>
-            <li><a href="#info">EXHIBITION INFO</a></li>
-            <li><a href="#event">EVENT</a></li>
+            <li><a href="#info">INFOMATION</a></li>
             <li><a href="#access">ACCESS</a></li>
             <li><a href="#archive">ARCHIVE</a></li>
+            <li><a href="#contact">CONTACT</a></li>
         </ul>
     </nav>
 
@@ -884,7 +974,7 @@
 
         <section id="info" class="js-scroll-trigger">
             <div class="section-inner">
-                <h2>EXHIBITION INFO</h2>
+                <h2>INFOMATION</h2>
                 <dl>
                     <dt>展示タイトル</dt>
                     <dd>Heteroscheme</dd>
@@ -894,22 +984,20 @@
                     <dd>13:00 - 19:00</dd>
                     <dt>入場料</dt>
                     <dd>無料(予約不要)</dd>
-                    <dt>後援</dt>
-                    <dd>アーツカウンシル東京<br></dd>
                 </dl>
             </div>
         </section>
 
         <section id="event" class="js-scroll-trigger">
             <div class="section-inner">
-                <h3>EVENT</h3>
+                <h2>EVENT</h2>
                 
                 <div class="event-highlight">
                     <dl>
                         <dt>日時</dt>
                         <dd>5/31 17:00 - 18:00</dd>
                         <dt>トークゲスト</dt>
-                        <dd>涌井 智仁（美術家・音楽家）</dd>
+                        <dd>涌井 智仁</dd>
                     </dl>
                     <p class="note">展示最終日には美術家/音楽家の涌井智仁氏をお招きして、展示作家４名とのトークイベントを開催いたします。</p>
                     
@@ -927,10 +1015,6 @@
                                     <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 1.77-6.98 6.23-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 1.77 6.78 6.23 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-1.771 6.979-6.23.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-1.778-6.78-6.23-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                                 </a>
                             </div>
-                            
-                            <div class="guest-url">
-                                <a href="https://7768697465686f757365.com/" target="_blank">WHITEHOUSE: https://7768697465686f757365.com/</a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -939,11 +1023,11 @@
 
         <section id="access" class="js-scroll-trigger">
             <div class="section-inner">
-                <h3>ACCESS</h3>
+                <h2>ACCESS</h2>
                 <dl>
                     <dt>会場</dt>
                     <dd>
-                        soco1010<br>
+                        <img src="image/soco1010.png" alt="soco1010ロゴ" class="soco-logo">
                         〒120-0038 東京都足立区千住橋戸町22-48<br>
                         <a href="https://soco1010.space/" target="_blank" rel="noopener noreferrer" class="site-link">▶ soco1010 公式サイト</a>
                     </dd>
@@ -990,7 +1074,39 @@
                     <p class="coming-soon-text">REVIEW</p>
                     <p class="coming-soon-desc">展示会期終了後、こちらにレビューを公開予定です。</p>
                 </div>
-                
+            </div>
+        </section>
+
+        <section id="credit" class="js-scroll-trigger">
+            <div class="section-inner">
+                <h2>CREDIT</h2>
+                <dl>
+                    <dt>助成</dt>
+                    <dd class="credit-dd-act">
+                        アーツカウンシル東京 <img src="image/ACT_logo-01.jpg" alt="アーツカウンシル東京" class="act-logo">
+                    </dd>
+                    <dt>主催</dt>
+                    <dd>髙橋侑大</dd>
+                    <dt>フライヤーデザイン</dt>
+                    <dd>
+                        <div class="credit-sns">
+                            クボーン
+                            <a href="https://www.instagram.com/_kubo_n/" target="_blank" aria-label="Instagram" class="credit-sns-link">
+                                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 1.77-6.98 6.23-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 1.77 6.78 6.23 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-1.771 6.979-6.23.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-1.778-6.78-6.23-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            </a>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+        </section>
+
+        <section id="contact" class="js-scroll-trigger">
+            <div class="section-inner">
+                <h2>CONTACT</h2>
+                <p class="contact-message">展示に関するご質問やお問い合わせは、こちらのメールアドレスまでご連絡ください。</p>
+                <div class="contact-email">
+                    <a href="mailto:info@soco1010.space">info@soco1010.space</a>
+                </div>
             </div>
         </section>
 
