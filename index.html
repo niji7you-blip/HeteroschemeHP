@@ -291,7 +291,7 @@
                 margin-left: auto; 
                 margin-right: max(12%, calc((100vw - 1200px) / 2)); 
             }
-            #artist .section-inner, #access .section-inner, #archive .section-inner, #contact .section-inner, #credit .section-inner {
+            #artist .section-inner, #access .section-inner, #archive .section-inner {
                 margin-right: auto;
             }
             .hamburger {
@@ -312,12 +312,13 @@
             color: var(--brand-blue);
         }
 
-        /* ★修正: CONTACTとCREDITを左揃え（デフォルト）にするため、ここから除外 */
+        /* 中央揃えの指定 */
         #artist .section-inner > h3, #access .section-inner > h3, #archive .section-inner > h2 {
             text-align: center;
         }
 
-        #event .section-inner > h3 { color: #dddddd; }
+        /* EVENTセクションの文字色 */
+        #event .section-inner > h2 { color: #dddddd; }
 
         /* 見出しの下線 */
         .section-inner > h2::after, .section-inner > h3::after {
@@ -331,8 +332,8 @@
             transition: width 2.0s cubic-bezier(0.22, 1, 0.36, 1) 0.6s; 
         }
         
-        /* EVENTセクションの見出し下線は白に */
-        #event .section-inner > h3::after {
+        /* ★修正: EVENTセクションの見出し下線は白に */
+        #event .section-inner > h2::after {
             background-color: #ffffff;
         }
 
@@ -341,7 +342,7 @@
             width: 100vw;
         }
 
-        /* ★修正: CONTACTとCREDITの下線を表示させるため、ここから除外 */
+        /* 中央揃えのセクションは下線を消す */
         #artist .section-inner > h3::after, #access .section-inner > h3::after, #archive .section-inner > h2::after {
             display: none;
         }
@@ -759,6 +760,18 @@
             position: relative; 
             z-index: 1;
         }
+        
+        /* ★追加: ひっそりと配置するWEB制作クレジット */
+        .web-credit {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.08); /* ほとんど見えないくらい薄く */
+            margin: 10px 0 0 0;
+            letter-spacing: 0.1em;
+            transition: color 0.5s ease;
+        }
+        .web-credit:hover {
+            color: rgba(255, 255, 255, 0.5); /* カーソルを乗せると少し浮かび上がる */
+        }
 
         /* === スマホ画面用のレイアウト === */
         @media (max-width: 768px) {
@@ -858,7 +871,7 @@
         <ul>
             <li><a href="#">HOME</a></li>
             <li><a href="#artist">ARTIST</a></li>
-            <li><a href="#info">INFOMATION</a></li>
+            <li><a href="#info">INFORMATION</a></li>
             <li><a href="#access">ACCESS</a></li>
             <li><a href="#archive">ARCHIVE</a></li>
             <li><a href="#contact">CONTACT</a></li>
@@ -869,7 +882,7 @@
         <ul>
             <li class="nav-home"><a href="#">HOME</a></li>
             <li><a href="#artist">ARTIST</a></li>
-            <li><a href="#info">INFOMATION</a></li>
+            <li><a href="#info">INFORMATION</a></li>
             <li><a href="#access">ACCESS</a></li>
             <li><a href="#archive">ARCHIVE</a></li>
             <li><a href="#contact">CONTACT</a></li>
@@ -974,7 +987,7 @@
 
         <section id="info" class="js-scroll-trigger">
             <div class="section-inner">
-                <h2>INFOMATION</h2>
+                <h2>INFORMATION</h2>
                 <dl>
                     <dt>展示タイトル</dt>
                     <dd>Heteroscheme</dd>
@@ -1023,7 +1036,7 @@
 
         <section id="access" class="js-scroll-trigger">
             <div class="section-inner">
-                <h2>ACCESS</h2>
+                <h3>ACCESS</h3>
                 <dl>
                     <dt>会場</dt>
                     <dd>
@@ -1103,7 +1116,7 @@
         <section id="contact" class="js-scroll-trigger">
             <div class="section-inner">
                 <h2>CONTACT</h2>
-                <p class="contact-message">展示に関するご質問やお問い合わせは、こちらのメールアドレスまでご連絡ください。</p>
+                <p class="contact-message">展示に関するご質問やお問い合わせは、こちらのメールアドレスまでお気軽にご連絡ください。</p>
                 <div class="contact-email">
                     <a href="mailto:info@soco1010.space">info@soco1010.space</a>
                 </div>
@@ -1114,6 +1127,7 @@
 
     <footer>
         <p>&copy; 2026 Heteroscheme. All Rights Reserved.</p>
+        <p class="web-credit">WEB制作：島津優理</p>
     </footer>
 
     <script>
