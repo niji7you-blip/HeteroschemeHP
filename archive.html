@@ -27,7 +27,6 @@
             letter-spacing: 0.08em;
             scroll-behavior: smooth;
             background-color: transparent; 
-            /* ★修正: 右側の余計な余白（はみ出し）を完全にカット */
             overflow-x: hidden; 
         }
 
@@ -50,10 +49,9 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* ★修正: 背景画像の手前に、85%の白フィルターをかける */
             background-color: rgba(255, 255, 255, 0.85); 
             z-index: -1;
-            pointer-events: none; /* クリック操作を邪魔しないようにする */
+            pointer-events: none; 
         }
 
         /* --- スマホ用：ハンバーガーメニューボタン --- */
@@ -142,16 +140,6 @@
             bottom: 60px;
             left: 60px;
             z-index: 90;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-20px);
-            transition: all 0.2s ease-out;
-        }
-
-        .side-nav.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0);
         }
 
         .side-nav ul {
@@ -181,6 +169,39 @@
 
         .side-nav a:hover {
             color: var(--accent-color); 
+        }
+
+        /* --- トップへ戻るボタン --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 60px;
+            right: 60px;
+            width: 60px;
+            height: 60px;
+            background-color: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: var(--dark-text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 90;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            border-color: var(--brand-blue);
+            color: var(--brand-blue);
+            background-color: rgba(255, 255, 255, 0.5);
         }
 
         /* --- メインコンテンツ --- */
@@ -250,13 +271,13 @@
             width: 100%;
             height: auto;
             display: block;
-            cursor: pointer; /* クリックできることを示す */
+            cursor: pointer; 
             transition: opacity 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* 少しだけ影をつけて浮かせる */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
         }
 
         .vertical-item img:hover {
-            opacity: 0.85; /* ホバーで反応を返す */
+            opacity: 0.85; 
         }
 
         .vertical-caption {
@@ -278,11 +299,12 @@
 
         /* --- モーダル（ライトボックス・拡大表示） --- */
         body.lightbox-open {
-            overflow: hidden; /* 背景のスクロールを禁止 */
+            overflow: hidden; 
         }
         body.lightbox-open .hamburger,
-        body.lightbox-open .side-nav {
-            display: none !important; /* メニューを隠す */
+        body.lightbox-open .side-nav,
+        body.lightbox-open .back-to-top {
+            display: none !important; 
         }
 
         .lightbox {
@@ -387,6 +409,14 @@
             .lightbox-prev { left: 0; }
             .lightbox-next { right: 0; }
             .lightbox-img-container { max-width: 95%; }
+
+            .back-to-top {
+                bottom: 30px;
+                right: 30px;
+                width: 50px;
+                height: 50px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -404,30 +434,30 @@
     <nav class="nav-menu" id="nav-menu">
         <ul>
             <li><a href="index.html">HOME</a></li>
-            <li><a href="index.html#statement">STATEMENT</a></li>
-            <li><a href="artists.html">ARTIST</a></li>
-            <li><a href="index.html#info">EXHIBITION INFO</a></li>
-            <li><a href="index.html#event">EVENT</a></li>
+            <li><a href="index.html#artist">ARTIST</a></li>
+            <li><a href="index.html#info">INFOMATION</a></li>
             <li><a href="index.html#access">ACCESS</a></li>
-            <li><a href="index.html#archive">ARCHIVE</a></li>
+            <li><a href="archive.html">ARCHIVE</a></li>
+            <li><a href="index.html#contact">CONTACT</a></li>
         </ul>
     </nav>
 
     <nav class="side-nav" id="side-nav">
         <ul>
             <li class="nav-home"><a href="index.html">HOME</a></li>
-            <li><a href="index.html#statement">STATEMENT</a></li>
-            <li><a href="artists.html">ARTIST</a></li>
-            <li><a href="index.html#info">EXHIBITION INFO</a></li>
-            <li><a href="index.html#event">EVENT</a></li>
+            <li><a href="index.html#artist">ARTIST</a></li>
+            <li><a href="index.html#info">INFOMATION</a></li>
             <li><a href="index.html#access">ACCESS</a></li>
-            <li><a href="index.html#archive">ARCHIVE</a></li>
+            <li><a href="archive.html">ARCHIVE</a></li>
+            <li><a href="index.html#contact">CONTACT</a></li>
         </ul>
     </nav>
 
     <header id="hero-header">
         <div class="scroll-down">Scroll ↓</div>
     </header>
+
+    <div class="back-to-top" id="back-to-top">TOP</div>
 
     <main>
         <h2 class="page-title">ARCHIVE</h2>
@@ -501,14 +531,24 @@
             });
         });
 
-        // PC用左下インデックスメニュー表示処理
-        const sideNav = document.getElementById('side-nav');
+        // TOPボタン表示処理
+        const backToTop = document.getElementById('back-to-top');
+
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { 
-                sideNav.classList.add('show');
+            // スクロール量が300を超えたらTOPボタンを表示
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
             } else {
-                sideNav.classList.remove('show');
+                backToTop.classList.remove('show');
             }
+        });
+
+        // TOPボタンクリックで一番上へスクロール
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
 
         // ==========================================
