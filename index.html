@@ -291,6 +291,7 @@
                 margin-left: auto; 
                 margin-right: max(12%, calc((100vw - 1200px) / 2)); 
             }
+            /* ★修正: accessを中央寄せレイアウトに戻しました */
             #artist .section-inner, #access .section-inner, #archive .section-inner {
                 margin-right: auto;
             }
@@ -312,13 +313,12 @@
             color: var(--brand-blue);
         }
 
-        /* 中央揃えの指定 */
+        /* ★修正: accessの見出しを中央揃えに戻しました */
         #artist .section-inner > h3, #access .section-inner > h3, #archive .section-inner > h2 {
             text-align: center;
         }
 
-        /* EVENTセクションの文字色 */
-        #event .section-inner > h2 { color: #dddddd; }
+        #event .section-inner > h3 { color: #dddddd; }
 
         /* 見出しの下線 */
         .section-inner > h2::after, .section-inner > h3::after {
@@ -332,8 +332,8 @@
             transition: width 2.0s cubic-bezier(0.22, 1, 0.36, 1) 0.6s; 
         }
         
-        /* ★修正: EVENTセクションの見出し下線は白に */
-        #event .section-inner > h2::after {
+        /* EVENTセクションの見出し下線は白に */
+        #event .section-inner > h3::after {
             background-color: #ffffff;
         }
 
@@ -342,7 +342,7 @@
             width: 100vw;
         }
 
-        /* 中央揃えのセクションは下線を消す */
+        /* ★修正: accessの見出しの下線を非表示に戻しました */
         #artist .section-inner > h3::after, #access .section-inner > h3::after, #archive .section-inner > h2::after {
             display: none;
         }
@@ -760,18 +760,6 @@
             position: relative; 
             z-index: 1;
         }
-        
-        /* ★追加: ひっそりと配置するWEB制作クレジット */
-        .web-credit {
-            font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.08); /* ほとんど見えないくらい薄く */
-            margin: 10px 0 0 0;
-            letter-spacing: 0.1em;
-            transition: color 0.5s ease;
-        }
-        .web-credit:hover {
-            color: rgba(255, 255, 255, 0.5); /* カーソルを乗せると少し浮かび上がる */
-        }
 
         /* === スマホ画面用のレイアウト === */
         @media (max-width: 768px) {
@@ -1127,7 +1115,6 @@
 
     <footer>
         <p>&copy; 2026 Heteroscheme. All Rights Reserved.</p>
-        <p class="web-credit">WEB制作：島津優理</p>
     </footer>
 
     <script>
