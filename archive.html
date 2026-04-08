@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCHIVE - Heteroscheme</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="image/fabi6.png">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 全体の設定 */
+        :root {
+            --theme-color: #ffffff;
+            --accent-color: #D4AF37; 
+            --brand-blue: rgba(37, 131, 198, 0.85); 
+            --dark-text-color: #333333; 
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans JP', sans-serif;
+            color: var(--dark-text-color);
+            line-height: 1.8;
+            letter-spacing: 0.08em;
+            scroll-behavior: smooth;
+            background-color: transparent; 
+            /* ★修正: 右側の余計な余白（はみ出し）を完全にカット */
+            overflow-x: hidden; 
+        }
+
+        /* --- 背景画像と白いフィルターの設定 --- */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('image/haikei-9.png'); 
+            background-size: cover;
+            background-position: top center;
+            z-index: -2;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* ★修正: 背景画像の手前に、85%の白フィルターをかける */
+            background-color: rgba(255, 255, 255, 0.85); 
+            z-index: -1;
+            pointer-events: none; /* クリック操作を邪魔しないようにする */
+        }
+
+        /* --- スマホ用：ハンバーガーメニューボタン --- */
+        .hamburger {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 45px;
+            height: 30px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .hamburger span {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: #6BAEE0;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { top: 13px; }
+        .hamburger span:nth-child(3) { bottom: 0; }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(13px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-13px) rotate(-45deg);
+        }
+
+        /* --- スマホ用：全画面ナビゲーションメニュー --- */
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(37, 131, 198, 0.95);  
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 99;
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .nav-menu li {
+            margin: 40px 0;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8rem;
+            letter-spacing: 0.15em;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- PC用：左下追従インデックスメニュー --- */
+        .side-nav {
+            position: fixed;
+            bottom: 60px;
+            left: 60px;
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-20px);
+            transition: all 0.2s ease-out;
+        }
+
+        .side-nav.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .side-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px; 
+        }
+
+        .side-nav .nav-home a {
+            font-size: 2.2rem; 
+            font-weight: 700;  
+            margin-bottom: 5px;
+        }
+
+        .side-nav a {
+            color: rgba(37, 131, 198, 1); 
+            text-decoration: none;
+            font-size: 2rem; 
+            font-weight: 400; 
+            letter-spacing: 0.15em;
+            line-height: 1.1; 
+            transition: color 0.3s;
+        }
+
+        .side-nav a:hover {
+            color: var(--accent-color); 
+        }
+
+        /* --- メインコンテンツ --- */
+        main {
+            position: relative;
+            padding: 80px 20px;
+            max-width: 950px; 
+            z-index: 1;
+        }
+
+        /* === PC画面用のレイアウト === */
+        @media (min-width: 769px) {
+            main {
+                margin-left: auto; 
+                margin-right: max(8%, calc((100vw - 1200px) / 2)); 
+                padding-top: 120px;
+            }
+            .hamburger {
+                display: none; 
+            }
+        }
+
+        /* ページ見出し */
+        .page-title {
+            font-size: 3rem;
+            font-weight: 500;
+            margin-top: 0;
+            margin-bottom: 60px;
+            text-align: left;
+            letter-spacing: 0.15em;
+            position: relative; 
+            padding-bottom: 10px;
+            color: var(--brand-blue);
+            z-index: 2;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100vw; 
+            height: 2px;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* アーカイブセクション全体 */
+        .archive-container {
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- アーカイブ（画像を大きく、縦スクロール） --- */
+        .archive-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 80px; 
+            margin-bottom: 80px; 
+        }
+
+        .vertical-item {
+            width: 100%;
+        }
+
+        .vertical-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer; /* クリックできることを示す */
+            transition: opacity 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* 少しだけ影をつけて浮かせる */
+        }
+
+        .vertical-item img:hover {
+            opacity: 0.85; /* ホバーで反応を返す */
+        }
+
+        .vertical-caption {
+            text-align: center;
+            margin: 20px 0 0;
+            font-size: 0.95rem;
+            color: var(--dark-text-color);
+            letter-spacing: 0.15em;
+        }
+
+        .update-notice {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #777;
+            margin-top: 0;
+            margin-bottom: 40px;
+            letter-spacing: 0.1em;
+        }
+
+        /* --- モーダル（ライトボックス・拡大表示） --- */
+        body.lightbox-open {
+            overflow: hidden; /* 背景のスクロールを禁止 */
+        }
+        body.lightbox-open .hamburger,
+        body.lightbox-open .side-nav {
+            display: none !important; /* メニューを隠す */
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer; 
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-img-container {
+            position: relative;
+            text-align: center;
+            max-width: 85%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 80vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: zoom-in; 
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); 
+            transform-origin: center center;
+        }
+
+        .lightbox img.zoomed {
+            transform: scale(1.8);
+            cursor: zoom-out; 
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 30px; right: 40px;
+            font-size: 40px; color: #fff; cursor: pointer;
+            line-height: 1;
+            transition: color 0.3s;
+            z-index: 1001;
+        }
+        .lightbox-close:hover { color: var(--accent-color); }
+
+        .lightbox-prev, .lightbox-next {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            font-size: 50px; color: #fff; cursor: pointer;
+            padding: 20px;
+            user-select: none;
+            transition: color 0.3s;
+            z-index: 1001;
+        }
+        .lightbox-prev:hover, .lightbox-next:hover { color: var(--accent-color); }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+
+        .lightbox-caption {
+            color: #fff;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            margin-top: 15px;
+            z-index: 1001;
+        }
+
+        footer {
+            background-color: rgba(15, 10, 8, 0.95); 
+            text-align: center;
+            padding: 40px 0;
+            font-size: 0.8rem;
+            color: #888888;
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* === スマホ画面用のレイアウト === */
+        @media (max-width: 768px) {
+            .side-nav {
+                display: none !important; 
+            }
+            main { padding: 80px 20px 40px; }
+            .page-title { font-size: 2.2rem; }
+            .archive-container { padding: 0 0; }
+            
+            .archive-vertical { gap: 50px; margin-bottom: 60px; }
+            
+            .lightbox-prev, .lightbox-next {
+                font-size: 40px;
+                padding: 10px;
+            }
+            .lightbox-prev { left: 0; }
+            .lightbox-next { right: 0; }
+            .lightbox-img-container { max-width: 95%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <nav class="nav-menu" id="nav-menu">
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="index.html#statement">STATEMENT</a></li>
+            <li><a href="artists.html">ARTIST</a></li>
+            <li><a href="index.html#info">EXHIBITION INFO</a></li>
+            <li><a href="index.html#event">EVENT</a></li>
+            <li><a href="index.html#access">ACCESS</a></li>
+            <li><a href="index.html#archive">ARCHIVE</a></li>
+        </ul>
+    </nav>
+
+    <nav class="side-nav" id="side-nav">
+        <ul>
+            <li class="nav-home"><a href="index.html">HOME</a></li>
+            <li><a href="index.html#statement">STATEMENT</a></li>
+            <li><a href="artists.html">ARTIST</a></li>
+            <li><a href="index.html#info">EXHIBITION INFO</a></li>
+            <li><a href="index.html#event">EVENT</a></li>
+            <li><a href="index.html#access">ACCESS</a></li>
+            <li><a href="index.html#archive">ARCHIVE</a></li>
+        </ul>
+    </nav>
+
+    <header id="hero-header">
+        <div class="scroll-down">Scroll ↓</div>
+    </header>
+
+    <main>
+        <h2 class="page-title">ARCHIVE</h2>
+
+        <div class="archive-container">
+            
+            <div class="archive-vertical">
+                <div class="vertical-item">
+                    <img src="image/archive1.jpg" alt="展示風景 1">
+                    <p class="vertical-caption">展示風景 1</p>
+                </div>
+                <div class="vertical-item">
+                    <img src="image/archive2.png" alt="展示風景 2">
+                    <p class="vertical-caption">展示風景 2</p>
+                </div>
+                <div class="vertical-item">
+                    <img src="image/archive3.png" alt="展示風景 3">
+                    <p class="vertical-caption">展示風景 3</p>
+                </div>
+                <div class="vertical-item">
+                    <img src="image/archive4.png" alt="展示風景 4">
+                    <p class="vertical-caption">展示風景 4</p>
+                </div>
+                <div class="vertical-item">
+                    <img src="image/archive5.png" alt="展示風景 5">
+                    <p class="vertical-caption">展示風景 5</p>
+                </div>
+                <div class="vertical-item">
+                    <img src="image/archive6.png" alt="展示風景 6">
+                    <p class="vertical-caption">展示風景 6</p>
+                </div>
+            </div>
+
+            <p class="update-notice">※展示写真は随時追加予定です。</p>
+
+            <div id="lightbox" class="lightbox">
+                <span class="lightbox-close">&times;</span>
+                <span class="lightbox-prev">&#10094;</span>
+                
+                <div class="lightbox-img-container">
+                    <img id="lightbox-img" src="" alt="">
+                    <div id="lightbox-caption" class="lightbox-caption"></div>
+                </div>
+
+                <span class="lightbox-next">&#10095;</span>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Heteroscheme. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // スマホ用ハンバーガーメニュー
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        const navLinks = document.querySelectorAll('.nav-menu a');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // PC用左下インデックスメニュー表示処理
+        const sideNav = document.getElementById('side-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) { 
+                sideNav.classList.add('show');
+            } else {
+                sideNav.classList.remove('show');
+            }
+        });
+
+        // ==========================================
+        // ライトボックス（拡大表示＆ズーム）の機能
+        // ==========================================
+        const galleryImages = document.querySelectorAll('.vertical-item img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const closeBtn = document.querySelector('.lightbox-close');
+        const prevBtn = document.querySelector('.lightbox-prev');
+        const nextBtn = document.querySelector('.lightbox-next');
+
+        let currentIndex = 0;
+        
+        // ページ内にある画像の情報を配列にまとめる
+        const imagesData = Array.from(galleryImages).map(img => ({
+            src: img.src,
+            alt: img.alt || (img.nextElementSibling ? img.nextElementSibling.textContent : '')
+        }));
+
+        galleryImages.forEach((img, index) => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentIndex = index;
+                updateLightbox();
+                lightbox.classList.add('active');
+                document.body.classList.add('lightbox-open'); // スクロールとメニューをロック
+            });
+        });
+
+        function updateLightbox() {
+            lightboxImg.src = imagesData[currentIndex].src;
+            lightboxCaption.textContent = imagesData[currentIndex].alt;
+            lightboxImg.classList.remove('zoomed'); // ズーム状態をリセット
+        }
+
+        function showNext() {
+            currentIndex = (currentIndex + 1) % imagesData.length;
+            updateLightbox();
+        }
+
+        function showPrev() {
+            currentIndex = (currentIndex - 1 + imagesData.length) % imagesData.length;
+            updateLightbox();
+        }
+
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            showNext();
+        });
+        
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showPrev();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+            document.body.classList.remove('lightbox-open'); 
+        });
+
+        // 黒背景クリックで閉じる
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox || e.target.classList.contains('lightbox-img-container')) {
+                lightbox.classList.remove('active');
+                document.body.classList.remove('lightbox-open'); 
+            }
+        });
+
+        // 画像クリックでズームイン/ズームアウト
+        lightboxImg.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            lightboxImg.classList.toggle('zoomed'); 
+        });
+
+        // キーボード操作
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return; 
+            
+            if (e.key === 'ArrowRight') {
+                showNext();
+                e.preventDefault(); 
+            }
+            if (e.key === 'ArrowLeft') {
+                showPrev();
+                e.preventDefault(); 
+            }
+            if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+                document.body.classList.remove('lightbox-open'); 
+            }
+        });
+    </script>
+</body>
+</html>

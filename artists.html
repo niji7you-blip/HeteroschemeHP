@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARTISTS - Heteroscheme</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="image/fabi6.png">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 全体の設定（index.htmlと統一） */
+        :root {
+            --theme-color: #ffffff;
+            --accent-color: #D4AF37; 
+            --brand-blue: rgba(37, 131, 198, 0.85); 
+            --dark-text-color: #333333; 
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans JP', sans-serif;
+            color: var(--dark-text-color);
+            line-height: 1.8;
+            letter-spacing: 0.08em;
+            background-color: #eeeeee; 
+        }
+
+        /* --- スマホ用：ハンバーガーメニューボタン --- */
+        .hamburger {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 45px;
+            height: 30px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .hamburger span {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: #6BAEE0;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { top: 13px; }
+        .hamburger span:nth-child(3) { bottom: 0; }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(13px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-13px) rotate(-45deg);
+        }
+
+        /* --- スマホ用：全画面ナビゲーションメニュー --- */
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(37, 131, 198, 0.95);  
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 99;
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .nav-menu li {
+            margin: 40px 0;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8rem;
+            letter-spacing: 0.15em;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- PC用：左下追従インデックスメニュー --- */
+        .side-nav {
+            position: fixed;
+            bottom: 60px;
+            left: 60px;
+            z-index: 90;
+            /* ★修正: 最初から表示されるように非表示設定を削除 */
+        }
+
+        .side-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px; 
+        }
+
+        .side-nav .nav-home a {
+            font-size: 2.2rem; 
+            font-weight: 700;  
+            margin-bottom: 5px;
+        }
+
+        .side-nav a {
+            color: rgba(37, 131, 198, 1); 
+            text-decoration: none;
+            font-size: 2rem; 
+            font-weight: 400; 
+            letter-spacing: 0.15em;
+            line-height: 1.1; 
+            transition: color 0.3s;
+        }
+
+        .side-nav a:hover {
+            color: var(--accent-color); 
+        }
+
+        /* --- トップへ戻るボタン --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 60px;
+            right: 60px;
+            width: 60px;
+            height: 60px;
+            background-color: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: var(--dark-text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 90;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            border-color: var(--brand-blue);
+            color: var(--brand-blue);
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- メインコンテンツ --- */
+        main {
+            position: relative;
+            padding: 80px 20px;
+            max-width: 850px; 
+            z-index: 1;
+            overflow: hidden; 
+        }
+
+        /* === PC画面用のレイアウト === */
+        @media (min-width: 769px) {
+            main {
+                margin-left: auto; 
+                margin-right: max(12%, calc((100vw - 1200px) / 2)); 
+                padding-top: 120px;
+            }
+            .hamburger {
+                display: none; 
+            }
+        }
+
+        /* ページ見出し */
+        .page-title {
+            font-size: 3rem;
+            font-weight: 500;
+            margin-top: 0;
+            margin-bottom: 60px;
+            text-align: left;
+            letter-spacing: 0.15em;
+            position: relative; 
+            padding-bottom: 10px;
+            color: var(--brand-blue);
+            z-index: 2;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100vw; 
+            height: 2px;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* 各作家のセクション */
+        .artist-detail {
+            background-color: #ffffff; 
+            border: 1px solid rgba(0, 0, 0, 0.15); 
+            border-radius: 0; 
+            padding: 50px;
+            margin-bottom: 80px;
+            box-shadow: none; 
+            position: relative;
+            z-index: 2;
+            scroll-margin-top: 40px; 
+        }
+
+        /* アイコンと名前のエリア */
+        .artist-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0,0,0,0.1); 
+            padding-bottom: 20px;
+        }
+
+        .artist-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 0; 
+            background-color: #fcfcfc; 
+            overflow: hidden;
+            flex-shrink: 0;
+            margin-right: 30px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .artist-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .artist-name-area h2 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin: 0 0 5px;
+            letter-spacing: 0.1em;
+            color: var(--brand-blue); 
+        }
+
+        .artist-name-area p {
+            font-size: 1rem;
+            color: #666666; 
+            margin: 0;
+            letter-spacing: 0.05em;
+        }
+
+        /* 各アーティストのSNSリンク */
+        .artist-links {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .artist-links a {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            color: #aaaaaa;
+            transition: color 0.3s ease;
+        }
+
+        .artist-links a svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .artist-links a:hover {
+            color: var(--brand-blue);
+        }
+
+        /* --- 2カラムレイアウト（左：プロフィール、右：カルーセル） --- */
+        .artist-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 40px; 
+            align-items: start;
+        }
+
+        /* プロフィール文 */
+        .artist-profile {
+            text-align: justify;
+            color: var(--dark-text-color); 
+        }
+
+        /* --- カルーセル（スライダー）のデザイン --- */
+        .carousel-container {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.15); 
+            border-radius: 0; 
+            overflow: hidden; 
+            position: relative;
+        }
+
+        .carousel-track {
+            display: flex;
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory; 
+            scroll-behavior: smooth; 
+            -webkit-overflow-scrolling: touch; 
+            scrollbar-width: none; 
+        }
+        
+        .carousel-track::-webkit-scrollbar {
+            display: none; 
+        }
+
+        .carousel-slide {
+            min-width: 100%; 
+            box-sizing: border-box;
+            scroll-snap-align: start; 
+        }
+
+        .carousel-img {
+            width: 100%;
+            aspect-ratio: 4 / 3; 
+            background-color: #f9f9f9;
+        }
+
+        .carousel-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer; 
+        }
+
+        .carousel-caption {
+            padding: 15px;
+            font-size: 0.85rem;
+            color: #666666; 
+            text-align: center;
+        }
+
+        /* 丸ポチ */
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 0 20px 0;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #cccccc; 
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dot.active {
+            background-color: var(--brand-blue); 
+        }
+
+        /* ライトボックス（拡大表示）のスタイル */
+        .lightbox {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer; 
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-img-container {
+            position: relative;
+            text-align: center;
+            max-width: 85%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: default; 
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 80vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 30px; right: 40px;
+            font-size: 40px; color: #fff; cursor: pointer;
+            line-height: 1;
+            transition: color 0.3s;
+            z-index: 1001;
+        }
+        .lightbox-close:hover { color: var(--accent-color); }
+
+        /* カルーセル拡大表示用の左右矢印 */
+        .lightbox-prev, .lightbox-next {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            font-size: 50px; color: #fff; cursor: pointer;
+            padding: 20px;
+            user-select: none;
+            transition: color 0.3s;
+            z-index: 1001;
+        }
+        .lightbox-prev:hover, .lightbox-next:hover { color: var(--accent-color); }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+
+        .lightbox-caption {
+            color: #fff;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            margin-top: 15px;
+            z-index: 1001;
+        }
+
+        footer {
+            background-color: rgba(15, 10, 8, 0.95); 
+            text-align: center;
+            padding: 40px 0;
+            font-size: 0.8rem;
+            color: #888888;
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* === スマホ画面用のレイアウト === */
+        @media (max-width: 768px) {
+            .side-nav {
+                display: none !important; 
+            }
+            main { padding: 80px 20px 40px; }
+            .page-title { font-size: 2.2rem; }
+            .artist-detail { padding: 30px 20px; margin-bottom: 50px; }
+            .artist-header { flex-direction: column; text-align: center; }
+            .artist-icon { margin: 0 0 20px 0; }
+            .artist-links { justify-content: center; } 
+            
+            .artist-body {
+                grid-template-columns: 1fr; 
+                gap: 30px;
+            }
+
+            .lightbox-prev, .lightbox-next {
+                font-size: 40px;
+                padding: 10px;
+            }
+            .lightbox-prev { left: 0; }
+            .lightbox-next { right: 0; }
+            
+            .back-to-top {
+                bottom: 30px;
+                right: 30px;
+                width: 50px;
+                height: 50px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <nav class="nav-menu" id="nav-menu">
+        <ul>
+            <li><a href="index.html#artist">HOME</a></li>
+        </ul>
+    </nav>
+
+    <nav class="side-nav" id="side-nav">
+        <ul>
+            <li class="nav-home"><a href="index.html#artist">HOME</a></li>
+        </ul>
+    </nav>
+
+    <div class="back-to-top" id="back-to-top">TOP</div>
+
+    <main>
+        <h2 class="page-title">ARTISTS</h2>
+
+        <section id="igarashi" class="artist-detail">
+            <div class="artist-header">
+                <div class="artist-icon"><img src="image/igarashi.png" alt="五十嵐 千紘"></div>
+                <div class="artist-name-area">
+                    <h2>五十嵐 千紘</h2>
+                    <p>Chihiro Igarashi</p>
+                    
+                    <div class="artist-links">
+                        <a href="https://instagram.com/igarashi0986" target="_blank" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 1.77-6.98 6.23-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 1.77 6.78 6.23 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-1.771 6.979-6.23.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-1.778-6.78-6.23-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="mailto:example_igarashi@example.com" aria-label="Email">
+                            <svg viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="artist-body">
+                <div class="artist-profile">
+                    <p>東京藝術大学 音楽学部 音楽環境創造科に在学。<br>メディアが発達した現代に適応した身体の内的な輪郭を探るべく、パフォーマンス・インスタレーションを軸に制作を行う。VJとしても活動。</p>
+                </div>
+
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko_igarashi.jpg" alt="Virtual Shuttle Run(2024)"></div>
+                            <div class="carousel-caption">Virtual Shuttle Run(2024)</div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko2_igarashi.png" alt="咀嚼から排泄まで(2024)"></div>
+                            <div class="carousel-caption">咀嚼から排泄まで(2024)</div>
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="shimazu" class="artist-detail">
+            <div class="artist-header">
+                <div class="artist-icon"><img src="image/shimazu.png" alt="島津 優理"></div>
+                <div class="artist-name-area">
+                    <h2>島津 優理</h2>
+                    <p>Yuri Shimazu</p>
+
+                    <div class="artist-links">
+                        <a href="https://instagram.com/shimazu_log" target="_blank" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 1.77-6.98 6.23-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 1.77 6.78 6.23 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-1.771 6.979-6.23.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-1.778-6.78-6.23-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="mailto:example_shimazu@example.com" aria-label="Email">
+                            <svg viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="artist-body">
+                <div class="artist-profile">
+                    <p>東京藝術大学 音楽学部 音楽環境創造科に在学。<br>
+                    プログラミングや電子工作（Python、Arduino、Max/MSPなど）を用い、音と事象の結びつきを探求するメディアアートやゲームの制作を行う。<br>
+                    これまでに、音の鳴るキューブを用いたパズルゲームやセンサーとカメラを使用したワイヤレスの大縄跳びゲームなど、鑑賞者の行為を媒介とするインタラクティブな作品を発表している。</p>
+                </div>
+
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko_shimazu.jpg" alt="Cuby(2024)"></div>
+                            <div class="carousel-caption">Cuby(2024)</div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko2_shimazu.png" alt="おおなわゲーム(2025)"></div>
+                            <div class="carousel-caption">おおなわゲーム(2025)</div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko3_shimazu.png" alt="CQer(2025)"></div>
+                            <div class="carousel-caption">CQer(2025)</div>
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="takahashi" class="artist-detail">
+            <div class="artist-header">
+                <div class="artist-icon"><img src="image/takahashi.png" alt="髙橋 侑大"></div>
+                <div class="artist-name-area">
+                    <h2>髙橋 侑大</h2>
+                    <p>Yudai Takahashi</p>
+
+                    <div class="artist-links">
+                        <a href="https://instagram.com/yudai_tkhs" target="_blank" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 1.77-6.98 6.23-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 1.77 6.78 6.23 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-1.771 6.979-6.23.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-1.778-6.78-6.23-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="mailto:example_takahashi@example.com" aria-label="Email">
+                            <svg viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="artist-body">
+                <div class="artist-profile">
+                    <p>2004年、愛知県出身。
+                    <br>東京藝術大学音楽環境創造科４年在籍中。
+                    <br>現代音楽の分野での器楽曲やミクスト音楽、シアターピース、マルチメディアパフォーマンスの創作をベースとしながら、映像作品の制作も行なっている。近作では、楽器を演奏するという行為を別の文脈と接続して異化することをテーマとしている。</p>
+                </div>
+
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko_takahashi.png" alt="The opposite(2025)"></div>
+                            <div class="carousel-caption">The opposite(2025)</div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko2_takahashi.jpg" alt="Witch/Time?/Sand(2025)"></div>
+                            <div class="carousel-caption">Witch/Time?/Sand(2025)</div>
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="moriuchi" class="artist-detail">
+            <div class="artist-header">
+                <div class="artist-icon"><img src="image/moriuchi.png" alt="森内 慎之助"></div>
+                <div class="artist-name-area">
+                    <h2>森内 慎之助</h2>
+                    <p>Shinnosuke Moriuchi</p>
+
+                    <div class="artist-links">
+                        <a href="https://instagram.com/aiito_mani" target="_blank" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 1.77-6.98 6.23-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 1.77 6.78 6.23 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-1.771 6.979-6.23.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-1.778-6.78-6.23-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="mailto:example_moriuchi@example.com" aria-label="Email">
+                            <svg viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="artist-body">
+                <div class="artist-profile">
+                    <p>2003年生まれ、22歳、千葉県出身。
+                        <br>東京藝術大学 音楽学部 音楽環境創造科に在学。
+                        <br>音と物質性、人の意識との関係に興味を持ち、様々なものを音によって再構築して制作を行う。
+                        <br>また、作編曲・立体音響・レコーディング・ミキシング・サウンドインスタレーション・サウンドデザインなどの制作を行っている。
+                        <br>10歳でピアノを藤本節子氏に師事、DAWを用いた作曲を独学で始める。
+                        <br>バンドグループ「AIITO」メンバー。</p>
+                </div>
+
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko_moriuchi.png" alt="Un/imagine(2025)"></div>
+                            <div class="carousel-caption">Un/imagine(2025)</div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko2_moriuchi.png" alt="動く体、動かない体(2024)"></div>
+                            <div class="carousel-caption">動く体、動かない体(2024)</div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="carousel-img"><img src="image/sanko3_moriuchi.png" alt="deviation(2024)"></div>
+                            <div class="carousel-caption">deviation(2024)</div>
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <span class="lightbox-prev">&#10094;</span>
+        
+        <div class="lightbox-img-container">
+            <img id="lightbox-img" src="" alt="">
+            <div id="lightbox-caption" class="lightbox-caption"></div>
+        </div>
+
+        <span class="lightbox-next">&#10095;</span>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Heteroscheme. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // スマホ用ハンバーガーメニュー
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        const navLinks = document.querySelectorAll('.nav-menu a');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // PC用左下インデックスメニューとTOPボタン表示処理
+        const sideNav = document.getElementById('side-nav');
+        const backToTop = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            // スクロール量が300を超えたらTOPボタンを表示
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // TOPボタンクリックで一番上へスクロール
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // カルーセル（ドットクリック・スワイプ）の制御
+        const carousels = document.querySelectorAll('.carousel-container');
+        carousels.forEach(carousel => {
+            const track = carousel.querySelector('.carousel-track');
+            const slides = carousel.querySelectorAll('.carousel-slide');
+            const dots = carousel.querySelectorAll('.dot');
+            
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    const slideWidth = slides[0].clientWidth;
+                    track.scrollTo({
+                        left: slideWidth * index,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            track.addEventListener('scroll', () => {
+                const slideWidth = slides[0].clientWidth;
+                const index = Math.round(track.scrollLeft / slideWidth);
+                
+                dots.forEach(d => d.classList.remove('active'));
+                if (dots[index]) {
+                    dots[index].classList.add('active');
+                }
+            });
+        });
+
+        // ==========================================
+        // ライトボックス（拡大表示・左右切り替え）の機能
+        // ==========================================
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const closeBtn = document.querySelector('.lightbox-close');
+        const prevBtn = document.querySelector('.lightbox-prev');
+        const nextBtn = document.querySelector('.lightbox-next');
+
+        let currentArtistImages = []; 
+        let currentIndex = 0; 
+
+        const carouselImages = document.querySelectorAll('.carousel-slide img');
+        carouselImages.forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+
+                const artistSection = img.closest('.artist-detail');
+                const allImagesInSection = artistSection.querySelectorAll('.carousel-slide img');
+                
+                currentArtistImages = Array.from(allImagesInSection).map(image => ({
+                    src: image.src,
+                    alt: image.alt
+                }));
+
+                currentIndex = currentArtistImages.findIndex(image => image.src === img.src);
+
+                updateLightbox();
+                lightbox.classList.add('active');
+            });
+        });
+
+        function updateLightbox() {
+            if (currentArtistImages.length === 0) return;
+
+            const currentData = currentArtistImages[currentIndex];
+            lightboxImg.src = currentData.src;
+            lightboxImg.alt = currentData.alt;
+            lightboxCaption.textContent = currentData.alt;
+
+            if (currentArtistImages.length <= 1) {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+            }
+        }
+
+        function showNext() {
+            if (currentArtistImages.length <= 1) return;
+            currentIndex = (currentIndex + 1) % currentArtistImages.length;
+            updateLightbox();
+        }
+
+        function showPrev() {
+            if (currentArtistImages.length <= 1) return;
+            currentIndex = (currentIndex - 1 + currentArtistImages.length) % currentArtistImages.length;
+            updateLightbox();
+        }
+
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            showNext();
+        });
+        
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            showPrev();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+            currentArtistImages = [];
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+                currentArtistImages = [];
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+
+            if (e.key === 'ArrowRight') {
+                showNext();
+            } else if (e.key === 'ArrowLeft') {
+                showPrev();
+            } else if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+                currentArtistImages = [];
+            }
+        });
+    </script>
+</body>
+</html>
