@@ -291,6 +291,7 @@
                 margin-left: auto; 
                 margin-right: max(12%, calc((100vw - 1200px) / 2)); 
             }
+            /* ★修正: contactとcreditもinfo等と同じように全体を右寄せに揃えるためにここから除外 */
             #artist .section-inner, #access .section-inner, #archive .section-inner {
                 margin-right: auto;
             }
@@ -702,14 +703,16 @@
         }
 
         .see-more-btn {
-            display: inline-block;
-            padding: 14px 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 40px;
             border: 1px solid var(--brand-blue); 
             border-radius: 0; 
             color: var(--brand-blue); 
             text-decoration: none;
             font-size: 0.9rem;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.15em;
             transition: all 0.3s ease;
             background-color: transparent;
         }
@@ -717,6 +720,20 @@
         .see-more-btn:hover {
             background-color: var(--brand-blue); 
             color: #ffffff; 
+        }
+
+        /* ★追加: ダウンロードボタン専用の強調スタイル */
+        .see-more-btn.btn-download {
+            padding: 20px 45px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-width: 2px;
+            background-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .see-more-btn.btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
         }
 
         /* === 写真ギャラリー（グリッド表示） === */
@@ -761,20 +778,25 @@
             z-index: 1;
         }
         
-        /* ★追加: ひっそりと配置するWEB制作クレジット */
+        /* ひっそりと配置するWEB制作クレジット */
         .web-credit {
             font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.08); /* ほとんど見えないくらい薄く */
+            color: rgba(255, 255, 255, 0.08); 
             margin: 10px 0 0 0;
             letter-spacing: 0.1em;
             transition: color 0.5s ease;
         }
         .web-credit:hover {
-            color: rgba(255, 255, 255, 0.5); /* カーソルを乗せると少し浮かび上がる */
+            color: rgba(255, 255, 255, 0.5); 
         }
 
         /* === スマホ画面用のレイアウト === */
         @media (max-width: 768px) {
+            /* ★修正: スマホ版の背景画像をhaikei-9-1.pngに変更 */
+            .bg-image {
+                background-image: url('image/haikei-9-1.png');
+            }
+
             .side-nav {
                 display: none; 
             }
@@ -809,7 +831,7 @@
 
             #archive::after  { bottom: 20px; right: 15%; transform: rotate(-20deg); transform-origin: right center;}
             #archive.is-visible::after { width: 130px; }
-            #archive .section-inner::before { top: 25px; left: 15%; transform: rotate(15deg); }
+            #archive .section-inner::before { top: 25%; left: 15%; transform: rotate(15deg); }
             #archive.is-visible .section-inner::before { width: 110px; }
 
             #contact::after { bottom: 15px; right: 10%; transform: rotate(-10deg); transform-origin: right center; }
@@ -998,6 +1020,15 @@
                     <dt>入場料</dt>
                     <dd>無料(予約不要)</dd>
                 </dl>
+
+                <div class="btn-container" style="text-align: left;">
+                    <a href="image/flyer.pdf" download="flyer.pdf" class="see-more-btn btn-download">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3.5h-1.25v1.5h1.25V11H19v1.5h-1.5V7h3v1.5zM9 9h1v-1H9v1zm5.5 3h1v-3h-1v3zM2 6v14c0 1.1.9 2 2 2h14v-1.5H4V6H2z"/>
+                        </svg>
+                        Flyer Download (PDF)
+                    </a>
+                </div>
             </div>
         </section>
 
