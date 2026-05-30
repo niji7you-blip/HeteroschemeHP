@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REVIEW - Heteroscheme</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="image/fabi6.png">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 全体の設定 */
+        :root {
+            --theme-color: #ffffff;
+            --accent-color: #D4AF37; 
+            --brand-blue: rgba(37, 131, 198, 0.85); 
+            --dark-text-color: #333333; 
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans JP', sans-serif;
+            color: var(--dark-text-color);
+            line-height: 1.8;
+            letter-spacing: 0.08em;
+            scroll-behavior: smooth;
+            background-color: transparent; 
+            overflow-x: hidden; 
+        }
+
+        /* --- 背景画像と白いフィルターの設定 --- */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('image/haikei-9.png'); 
+            background-size: cover;
+            background-position: top center;
+            z-index: -2;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.85); 
+            z-index: -1;
+            pointer-events: none; 
+        }
+
+        /* --- スマホ用：ハンバーガーメニューボタン --- */
+        .hamburger {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 45px;
+            height: 30px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .hamburger span {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: #6BAEE0;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { top: 13px; }
+        .hamburger span:nth-child(3) { bottom: 0; }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(13px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-13px) rotate(-45deg);
+        }
+
+        /* --- スマホ用：全画面ナビゲーションメニュー --- */
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(37, 131, 198, 0.95);  
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 99;
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .nav-menu li {
+            margin: 40px 0;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8rem;
+            letter-spacing: 0.15em;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- PC用：左下追従インデックスメニュー --- */
+        .side-nav {
+            position: fixed;
+            bottom: 60px;
+            left: 60px;
+            z-index: 90;
+        }
+
+        .side-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px; 
+        }
+
+        .side-nav .nav-home a {
+            font-size: 2.2rem; 
+            font-weight: 700;  
+            margin-bottom: 5px;
+        }
+
+        .side-nav a {
+            color: rgba(37, 131, 198, 1); 
+            text-decoration: none;
+            font-size: 2rem; 
+            font-weight: 400; 
+            letter-spacing: 0.15em;
+            line-height: 1.1; 
+            transition: color 0.3s;
+        }
+
+        .side-nav a:hover {
+            color: var(--accent-color); 
+        }
+
+        /* --- トップへ戻るボタン --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 60px;
+            right: 60px;
+            width: 60px;
+            height: 60px;
+            background-color: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: var(--dark-text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 90;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            border-color: var(--brand-blue);
+            color: var(--brand-blue);
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- メインコンテンツ --- */
+        main {
+            position: relative;
+            padding: 80px 20px;
+            max-width: 800px; /* テキストが読みやすいように少し絞る */
+            z-index: 1;
+            margin: 0 auto; /* 中央寄せ */
+        }
+
+        /* === PC画面用のレイアウト === */
+        @media (min-width: 769px) {
+            main {
+                padding-top: 120px;
+            }
+            .hamburger {
+                display: none; 
+            }
+        }
+
+        /* ページ見出し */
+        .page-title {
+            font-size: 3rem;
+            font-weight: 500;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: left;
+            letter-spacing: 0.15em;
+            position: relative; 
+            padding-bottom: 10px;
+            color: var(--brand-blue);
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%; 
+            height: 2px;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* --- レビュー本文のデザイン --- */
+        .review-author-head {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 50px;
+            font-weight: 500;
+        }
+
+        .review-body p {
+            margin-bottom: 2em;
+            text-align: justify;
+            font-size: 1.05rem;
+            line-height: 2;
+        }
+
+        .references {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .references h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .references ul {
+            padding-left: 20px;
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .references li {
+            margin-bottom: 10px;
+        }
+
+        /* --- 執筆者プロフィール --- */
+        .author-profile {
+            margin-top: 60px;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .author-profile h4 {
+            font-size: 1.2rem;
+            color: var(--brand-blue);
+            margin: 0 0 20px 0;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .author-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+        }
+
+        .author-desc {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin: 0 0 15px 0;
+        }
+
+        .author-link {
+            display: inline-block;
+            color: var(--brand-blue);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .author-link:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: rgba(15, 10, 8, 0.95); 
+            text-align: center;
+            padding: 40px 0;
+            font-size: 0.8rem;
+            color: #888888;
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 2;
+            margin-top: 80px;
+        }
+
+        /* === スマホ画面用のレイアウト === */
+        @media (max-width: 768px) {
+            .bg-image {
+                background-image: url('image/haikei-9-1.png');
+            }
+            .side-nav {
+                display: none !important; 
+            }
+            main { padding: 80px 20px 40px; }
+            .page-title { font-size: 2.2rem; }
+            
+            .review-body p { font-size: 1rem; }
+            .author-profile { padding: 25px; }
+
+            .back-to-top {
+                bottom: 30px;
+                right: 30px;
+                width: 50px;
+                height: 50px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <nav class="nav-menu" id="nav-menu">
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="index.html#artist">ARTIST</a></li>
+            <li><a href="index.html#info">INFORMATION</a></li>
+            <li><a href="index.html#access">ACCESS</a></li>
+            <li><a href="index.html#archive">ARCHIVE</a></li>
+            <li><a href="review.html">REVIEW</a></li>
+            <li><a href="index.html#contact">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <nav class="side-nav" id="side-nav">
+        <ul>
+            <li class="nav-home"><a href="index.html">HOME</a></li>
+            <li><a href="index.html#artist">ARTIST</a></li>
+            <li><a href="index.html#info">INFORMATION</a></li>
+            <li><a href="index.html#access">ACCESS</a></li>
+            <li><a href="index.html#archive">ARCHIVE</a></li>
+            <li><a href="review.html">REVIEW</a></li>
+            <li><a href="index.html#contact">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <div class="back-to-top" id="back-to-top">TOP</div>
+
+    <main>
+        <h2 class="page-title">REVIEW</h2>
+        <p class="review-author-head">執筆者：松浦知也</p>
+
+        <div class="review-body">
+            <p>本文章は、soco1010にて2026年5月に開催された、五十嵐千紘、島津優理、髙橋侑大、森内慎之助の4人によるグループ展「Heteroscheme」のレビューである（なお、この文章は企画者らより依頼のもと、会期終盤に公開することを念頭において執筆した文章である）。</p>
+
+            <p>展示タイトルである「Heteroscheme」は彼/彼女らによれば、様々な方法論の中における「異なる尺度で先の時間に音を配置すること」を表す造語である。</p>
+
+            <p>例えば五十嵐千紘による『My, Dear, Twinkle Star』は、メジャーやルービックキューブ、ドーナツといった様々な"6個"の要素を持つ対象を指差したり、キューブを前方に向けたり、ドーナツを食べたりすることで「きらきら星」の演奏を行う。鑑賞時には、作者による歌唱がついているものと付いていない版とが交互に流れていた。歌唱がついていない時のルービックキューブを回転させる映像には、単にキューブを回転させて机においた時の乾いた打音が鳴っている。しかし、回転の度に規則的に変化するサウンドのテクスチャに、鑑賞者はどことなくきらきら星の音程を追いかけてしまう。「先の時間に音を配置する」というコンセプトの解釈に筆者は最初戸惑いを覚えたが、どうも4者の作品に共通するのはこのような、聴覚で聴いている外側の世界にある「音」について思索することにあるように思われる。</p>
+
+            <p>森内慎之助による『bip』はポータブルMTRともう一台のテープレコーダー、スプリングなどのオブジェクトの周りをループ上になったカセットテープが無限ループしており、レコーダーからは合成音声の喋り声が歪んだ音と共に聞こえてくる。もう一つの映像作品『声はその口を離れて』では、合成音声によるコミュニケーションが世間の会話を置き換えた結果、「会話エネルギー」が減少し寒冷化が引き起こされるという円城塔を思わせるSF的世界観の中での女性の一人語りが行われる。音研究者のジョナサン・スターンによれば、ある人間が声を出せることとは、ある種の人間らしさの証明（主体性があり、行為遂行性を伴うこと）と結び付けられており、失い難いというエイブリズム的価値観と結びついてきたことが指摘される(Sterne 2021, p78)。森内作品の中では、人間の口や喉といった映像表象は現れず、代わりに映し出されるのは冷たい都市の風景である。そこでは、人々がある意味自発的に自らの声を手放し合成音声に代理させるという、望んだ結果としての失声と、それによるアイデンティティの喪失が描かれる。自ら声を失って自ら困ることなどあるのだろうかと一瞬思うが、スターンは同書で、人々は時に自ら望んで障害に近い状態へと突き進むスカリフィケーション（体に傷を刻み込む儀礼）を引き起こし、それが望ましい状態だと認識される規範的インペアメントというものが世の中には存在するという（例えば難聴が時に熟年のエンジニアやロックンローラーにとって、大きな音に曝されてきた証拠として扱われるように）。現実的には声を失うことで寒冷化が起きるわけなどないとわかっていながら、その突飛さにより人が望んで主体性を手放すかもしれないという部分には奇妙な説得力とそら恐ろしさを感じさせるものがある。</p>
+
+            <p>髙橋侑大の映像作品『Beyond Long Long Eight Hundreds』は、あらゆる未来の事象を五線譜で設計する世界における架空の競技として、五線譜に書かれた囲碁の身体動作を30分近く正確に再現し続ける、ある種の盛大な八百長としてのスポーツ/演舞とその実況中継を描いたものである。五線譜には碁石を置くタイミングや、足をもぞもぞさせる動作などが精密に記述されており、その動作の正確さが審査員によって評価されるという仕組みだ。五線譜が過去に起きた現象の再現（讃美歌など）に使われてきた部分から、未来に起きる現象の設計として変遷してきた歴史の極端なifルートが描かれている。もちろん、実際には現代音楽の楽譜記述というのは、図形楽譜やジョン・ケージの不確定性の音楽のように、むしろ演奏者が解釈する余地を多く残すように発展してきたものではあるが、例えばスティーブ・ライヒの『Piano Phase』の人力による機械的演奏を持ち出すまでもなく、ポピュラー音楽の作曲と人間による演奏は、ちょうどこの映像作品の対戦者がやっているようにヘッドフォンでクリックを聴きながら未来の正確な設計をリアライズするように行われている。そのような、作曲行為が時に持ちうる身体の制御に伴う暴力性のようなものをユーモラスな形で現前させている。</p>
+
+            <p>島津優理の作品は2つのゲームを題材にした作品だ。1つ目の『ボタンを押してひたすら高い音を作るゲーム』は、複数のボタンのついたコントローラーが小さなテレビのような箱に繋がれている。インストラクションに従えば、時間内にボタンを操作することで鳴っている音の音程を高くすることが目標のゲームらしい。しかし、上下左右っぽい見た目をしているボタンも、そうでないボタンも音程をどのように操作しているかはプレイヤーには明かされない。2つ目の『٩( 'ω'　)و_is_crawling.pd』は、シンプルな横スクロールの障害物回避ゲームだが、グラフィカルプログラミング環境であるPure DataのパッチングUIがそのまま表示されており、PureData上のオブジェクトそのものが自キャラクターになっている。「音を高くするゲーム」とは対照的に、ゲーム性は一般的なものでありながらその実装の中身が全て露出している。どちらもゲームの装いを持ちながらも、そのゲーム自体が「ゲームとは何か？」を鑑賞者に問いかけてくるようだ。</p>
+
+            <p>高橋作品を見た後に島津作品を体験すると、ゲームとはそもそもプレイヤーがコントローラーを制御してゲームを遊ぶものでありつつ、物によってはゲームの制作者によってプレイヤーの方が制作者の望むようにプレイ/制御させられているという緊張関係にあるとも言える。時に鬼畜ゲー/理不尽ゲーなどと呼ばれるジャンルがあるように、人々は望んで苦しみにゆくことさえある（これも、ある種のスカリフィケーション＝通過儀礼だ）。</p>
+
+            <p>五十嵐作品の話に戻ってみれば、あらゆるものをきらきら星の楽譜として解釈するのは20世紀の音楽で開拓されてきた図形楽譜の解釈の柔軟さを逆転させ、全ての表現を1つの音楽へと収斂させるような暴力性も伴っている。しかし、この楽譜をきらきら星と解釈している暴力的な主体は、作者である五十嵐なのか、それとも実際に聞こえないはずのメロディを聴いている鑑賞者の方なのだろうか？その重心は、作者がメロディを歌いながら再生される映像と、環境音だけで再生される映像とで微妙な揺らぎを生じさせる。単なる映像作品でありながらも、鑑賞者は解釈を強いられるというゲームに巻き込まれているのだ。</p>
+
+            <p>4人の作品を概観してみれば、そこに共通するのは何らかの音を聞く、発する、解釈するという行為の主体性がまた別の誰かによって制御されるかもしれない、という社会の中における相互作用や、もっといえば権力関係のようなものに焦点を当てているように思えた。</p>
+
+            <p>ちょうど展示の数日後、藝大の千住キャンパスで開催されたアラン・リクトによるサウンドアートを再考するというテーマの特別講義を聞きに行った。氏の書籍「Sound Art」の2019年のアップデート版で新たに追加された要素として、例えばろう者の立場から音とは何かを問う作品を作り続けているChristine Kim Sunのようなアーティストの活動を包摂する概念としてサウンドアートの概念を用いることが提起されていた。リクトの更新されたサウンドアートの概念を借りるのであれば、「Heteroscheme」で発表されていた作品群は、紛れもなくサウンドアートの展示であったように思える。直接的な音楽作品を発表するのではなく、かつ、音表現そのものが鼓膜や蝸牛といった感覚器官に直接的に訴えかける訳でもない。しかし音を聴くという行為は蝸牛を刺激するだけではなく、その刺激が社会のどのような文脈に置かれているかによっても大きく異なる体験を生み出す。彼/彼女らによる「Heteroscheme」の定義がその事に自覚的なようには正直あまり思えないが、結果として4者の作品はそれぞれ異なる角度で、聴覚世界の外側で社会的緊張関係の中で生成される音の意味、という文脈をメタ的に語りかける作品群として機能していたと言えるだろう。</p>
+        </div>
+
+        <div class="references">
+            <h4>参考文献</h4>
+            <ul>
+                <li>Sterne, Jonathan. <i>Diminished Faculties: A Political Phenomenology of Impairment</i>. Duke University Press, 2021.</li>
+                <li>Licht, Alan. <i>Sound Art Revisited</i>. Bloomsbury USA Academic, 2019.</li>
+            </ul>
+        </div>
+
+        <div class="author-profile">
+            <h4>執筆者プロフィール</h4>
+            <p class="author-name">松浦 知也</p>
+            <p class="author-desc">
+                SoundMaker（音を作ったり音を出す道具と環境を作る人）。音に関わるメディア・インフラストラクチャ技術を実践を交え批評的にデザインする活動を「音楽土木工学」と称して研究している。音楽プログラミング言語「mimium」の設計と開発（2019〜）の他、ハウリングだけで音を出す自作電子楽器「Exidiophone」などを用いての演奏活動を継続的に行う。<br><br>
+                またインスタレーションやサウンドアートのサウンドシステム・プログラム開発のテクニカルなサポートや、レコーディング、映像のサウンドデザイン、舞台音響などを務める。<br><br>
+                博士（芸術工学）。1994年神奈川県茅ヶ崎市生まれ。2017年東京藝術大学 音楽学部音楽環境創造科卒業、2019年九州大学 大学院芸術工学府 修士課程修了、2022年同大学院博士後期課程修了。2022年〜2025年東京藝術大学芸術情報センター特任助教。2026年度よりフリーランス。
+            </p>
+            <a href="https://matsuuratomoya.com/" target="_blank" class="author-link">▶ https://matsuuratomoya.com/</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Heteroscheme. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // スマホ用ハンバーガーメニュー
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        const navLinks = document.querySelectorAll('.nav-menu a');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // TOPボタン表示処理
+        const backToTop = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // TOPボタンクリックで一番上へスクロール
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
