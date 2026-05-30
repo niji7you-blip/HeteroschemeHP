@@ -291,7 +291,6 @@
                 margin-left: auto; 
                 margin-right: max(12%, calc((100vw - 1200px) / 2)); 
             }
-            /* ★修正: contactとcreditもinfo等と同じように全体を右寄せに揃えるためにここから除外 */
             #artist .section-inner, #access .section-inner, #archive .section-inner {
                 margin-right: auto;
             }
@@ -333,7 +332,6 @@
             transition: width 2.0s cubic-bezier(0.22, 1, 0.36, 1) 0.6s; 
         }
         
-        /* ★修正: EVENTセクションの見出し下線は白に */
         #event .section-inner > h2::after {
             background-color: #ffffff;
         }
@@ -722,7 +720,7 @@
             color: #ffffff; 
         }
 
-        /* ★追加: ダウンロードボタン専用の強調スタイル */
+        /* ダウンロードボタン専用の強調スタイル */
         .see-more-btn.btn-download {
             padding: 20px 45px;
             font-size: 1.1rem;
@@ -767,6 +765,28 @@
             letter-spacing: 0.1em;
         }
 
+        /* --- レビューへのリンクボックス --- */
+        .review-link-box {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin-top: 40px;
+        }
+        
+        .review-link-box h3 {
+            font-size: 2rem;
+            color: var(--brand-blue);
+            letter-spacing: 0.15em;
+            margin: 0 0 15px 0;
+            font-weight: 500;
+        }
+
+        .review-link-desc {
+            font-size: 1rem;
+            color: var(--dark-text-color);
+            margin: 0 0 30px 0;
+        }
+
         footer {
             background-color: rgba(15, 10, 8, 0.95); 
             text-align: center;
@@ -792,7 +812,6 @@
 
         /* === スマホ画面用のレイアウト === */
         @media (max-width: 768px) {
-            /* ★修正: スマホ版の背景画像をhaikei-9-1.pngに変更 */
             .bg-image {
                 background-image: url('image/haikei-9-1.png');
             }
@@ -831,7 +850,7 @@
 
             #archive::after  { bottom: 20px; right: 15%; transform: rotate(-20deg); transform-origin: right center;}
             #archive.is-visible::after { width: 130px; }
-            #archive .section-inner::before { top: 25%; left: 15%; transform: rotate(15deg); }
+            #archive .section-inner::before { top: 25px; left: 15%; transform: rotate(15deg); }
             #archive.is-visible .section-inner::before { width: 110px; }
 
             #contact::after { bottom: 15px; right: 10%; transform: rotate(-10deg); transform-origin: right center; }
@@ -844,17 +863,12 @@
             #credit .section-inner::before { top: 15px; right: 5%; transform: rotate(-15deg); transform-origin: right center; }
             #credit.is-visible .section-inner::before { width: 120px; }
 
-            .coming-soon-text {
-                font-size: 1.8rem;
-            }
-
             dt, dd { width: 100%; border-bottom: none; }
             dt { margin-bottom: 5px; font-size: 0.9rem; } 
             dd { margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.15); padding-bottom: 10px; }
             
             #event dd { border-bottom: 1px solid rgba(255,255,255,0.15); }
 
-            /* スマホ時のロゴサイズ・連絡先調整 */
             .soco-logo { width: 180px; margin-bottom: 10px; }
             .act-logo { height: 70px; } 
             .contact-email { font-size: 1.4rem; }
@@ -876,6 +890,8 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
+            
+            .review-link-box h3 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -896,6 +912,7 @@
             <li><a href="#info">INFORMATION</a></li>
             <li><a href="#access">ACCESS</a></li>
             <li><a href="#archive">ARCHIVE</a></li>
+            <li><a href="review.html">REVIEW</a></li>
             <li><a href="#contact">CONTACT</a></li>
         </ul>
     </nav>
@@ -907,6 +924,7 @@
             <li><a href="#info">INFORMATION</a></li>
             <li><a href="#access">ACCESS</a></li>
             <li><a href="#archive">ARCHIVE</a></li>
+            <li><a href="review.html">REVIEW</a></li>
             <li><a href="#contact">CONTACT</a></li>
         </ul>
     </nav>
@@ -923,7 +941,7 @@
                 <p>「Heteroscheme」（ヘテロスキーム）は音を用いながらも別々の領域で活動する私たちが、「異なる尺度で先の時間に音を配置すること」を束ねるための造語です。</p>
                 <p>この４人はそれぞれ、音と事象との結びつきに関心を寄せてきました。そして音を媒介に、行為や出来事を再解釈する実践を行ってきました。<br>
                 耳は瞼のように、外の世界と自身を隔てる術を持ちません。至る所に音が氾濫する現代において、私たちの聴覚はその無数の情報に晒され続けています。</p>
-                <p>その中で、私たちはあえて「scheme(スキーム)」を広げ、先にある時間に音を配置します。或いは「scheme」を手放し、距離を置くこともできるはずです。</p>
+                <p>その中で、私たちはあえて「scheme(スキーム)」を広げ、先にある時間に音を配置します。あるいは「scheme」を手放し、距離を置くこともできるはずです。</p>
                 <p>雑踏、楽譜、架空の世界。<br>
                 本展では、各作家がスキームを作るということに焦点を当てます。未来の時間を各々が異なるスケールで、どのように形作ることができるのか。</p>
                 <p>私たちはそこに、「Heteroscheme」を立ち上げます。</p>
@@ -1114,9 +1132,10 @@
                     <a href="archive.html" class="see-more-btn">See More Gallery</a>
                 </div>
 
-                <div class="coming-soon-box" id="review">
-                    <p class="coming-soon-text">REVIEW</p>
-                    <p class="coming-soon-desc">展示会期終了後、こちらにレビューを公開予定です。</p>
+                <div id="review" style="margin-top: 80px; text-align: center;">
+                    <h3 style="font-size: 2rem; color: var(--brand-blue); letter-spacing: 0.15em; margin-bottom: 20px;">REVIEW</h3>
+                    <p style="color: var(--dark-text-color); margin-bottom: 30px;">松浦知也氏による本展のレビューを公開いたしました。</p>
+                    <a href="review.html" class="see-more-btn">Read Review</a>
                 </div>
             </div>
         </section>
