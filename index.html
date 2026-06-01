@@ -14,7 +14,6 @@
         :root {
             --theme-color: #ffffff;
             --accent-color: #D4AF37; 
-            --bg-overlay: rgba(0, 0, 0, 0.4); 
             --brand-blue: rgba(37, 131, 198, 0.85); 
             --dark-text-color: #333333; 
         }
@@ -365,7 +364,6 @@
             border-bottom: 1px solid rgba(0,0,0,0.15); 
         }
 
-        /* 暗い背景セクション(EVENT)内のdlの線を調整し、文字を大きく */
         #event dt, #event dd {
             border-bottom: 1px solid rgba(255,255,255,0.15);
         }
@@ -394,9 +392,39 @@
             text-align: justify;
         }
 
+        /* ★ 会期延長のお知らせバナー */
+        .news-banner {
+            background-color: rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--accent-color);
+            padding: 30px;
+            margin-bottom: 50px;
+            border-radius: 4px;
+        }
+        .news-banner h3 {
+            color: var(--accent-color);
+            margin: 0 0 15px 0;
+            font-size: 1.4rem;
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+        .news-banner p {
+            margin: 0 0 20px 0;
+            text-align: center;
+            font-weight: 500;
+            color: var(--dark-text-color);
+        }
+        .news-banner ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.8;
+            color: var(--dark-text-color);
+        }
+
         /* === ロゴ等の画像スタイル === */
-        
-        /* 会場ロゴ */
         .soco-logo {
             width: 250px; 
             height: auto;
@@ -404,7 +432,6 @@
             margin-bottom: 10px; 
         }
 
-        /* アーツカウンシルロゴ */
         .act-logo {
             height: 100px; 
             width: auto;
@@ -417,7 +444,6 @@
             align-items: center;
         }
 
-        /* クレジットのSNSアイコン */
         .credit-sns {
             display: flex;
             align-items: center;
@@ -439,7 +465,6 @@
             color: var(--brand-blue);
         }
 
-        /* 涌井さんのリンクアイコン */
         .guest-links {
             display: flex;
             justify-content: flex-start;
@@ -467,7 +492,7 @@
             color: var(--brand-blue); 
         }
 
-        /* === CONTACTセクションの専用デザイン === */
+        /* CONTACTセクションのデザイン */
         .contact-message {
             font-size: 1rem;
             margin-bottom: 25px;
@@ -490,7 +515,7 @@
             color: var(--accent-color);
         }
 
-        /* === EVENTセクションの強調デザイン === */
+        /* EVENTセクションの強調デザイン */
         .event-highlight {
             background-color: rgba(255, 255, 255, 0.05); 
             border: 1px solid rgba(255, 255, 255, 0.2); 
@@ -546,31 +571,7 @@
             line-height: 1.7;
         }
 
-        /* === REVIEWセクション（COMING SOON）のデザイン === */
-        .coming-soon-box {
-            text-align: center;
-            padding: 60px 20px;
-            border: 1px solid rgba(0, 0, 0, 0.15);
-            border-radius: 0;
-            background-color: rgba(255, 255, 255, 0.3);
-            margin-top: 20px;
-        }
-
-        .coming-soon-text {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: rgba(37, 131, 198, 0.6); 
-            letter-spacing: 0.2em;
-            margin: 0 0 15px 0;
-        }
-
-        .coming-soon-desc {
-            font-size: 1rem;
-            color: #666;
-            margin: 0;
-        }
-
-        /* === ACCESSセクションのデザイン === */
+        /* ACCESSセクションのデザイン */
         .map-container {
             width: 100%;
             margin-top: 30px;
@@ -601,7 +602,7 @@
             color: var(--accent-color);
         }
 
-        /* === ARTISTセクションのデザイン === */
+        /* ARTISTセクションのデザイン */
         .artist-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr); 
@@ -815,6 +816,9 @@
             .bg-image {
                 background-image: url('image/haikei-9-1.png');
             }
+            .news-banner { padding: 20px; }
+            .news-banner h3 { font-size: 1.2rem; }
+            .news-banner ul { font-size: 1.05rem; }
 
             .side-nav {
                 display: none; 
@@ -905,6 +909,7 @@
         <span></span>
     </div>
 
+    <!-- メニュー: 7項目にREVIEWを追加 -->
     <nav class="nav-menu" id="nav-menu">
         <ul>
             <li><a href="#">HOME</a></li>
@@ -1028,13 +1033,26 @@
         <section id="info" class="js-scroll-trigger">
             <div class="section-inner">
                 <h2>INFORMATION</h2>
+                
+                <!-- ★ 会期延長のお知らせバナーを追加 -->
+                <div class="news-banner">
+                    <h3>【会期延長のお知らせ】</h3>
+                    <p>ご好評につき、グループ展「Heteroscheme」の会期延長が決定いたしました！<br>ぜひこの機会にご来場ください。</p>
+                    <ul>
+                        <li>6/4 (木) 16:00 - 20:00</li>
+                        <li>6/5 (金) 16:00 - 20:00</li>
+                        <li>6/6 (土) 14:00 - 20:00</li>
+                        <li>6/7 (日) 14:00 - 20:00</li>
+                    </ul>
+                </div>
+
                 <dl>
                     <dt>展示タイトル</dt>
                     <dd>Heteroscheme</dd>
                     <dt>日程</dt>
-                    <dd>5/8 - 5/31（休廊日：月、火）</dd>
+                    <dd>5/8 - 5/31（休廊日：月、火）<br><span style="color: var(--accent-color); font-weight: 700;">※6/4〜6/7 延長展示開催</span></dd>
                     <dt>開場時間</dt>
-                    <dd>13:00 - 19:00</dd>
+                    <dd>13:00 - 19:00<br><span style="font-size: 0.9rem; color: #666;">（※延長期間中の時間は上記お知らせをご確認ください）</span></dd>
                     <dt>入場料</dt>
                     <dd>無料(予約不要)</dd>
                 </dl>
